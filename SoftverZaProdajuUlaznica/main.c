@@ -29,6 +29,22 @@ int provjera(char *korisnickoIme,char *lozinka,char *karakter)
     else printf("Greska prilikom otvaranja datoteke!");
 }
 
+int nalogPostoji(char *korisnickoIme)
+{
+    FILE *fp;
+    if(fp=fopen("nalozi.txt","r"))
+    {
+        NALOG n;
+        while(fscanf(fp,"%s",n.korisnickoIme)!=EOF)
+        if(strcmp(n.korisnickoIme,korisnickoIme)==0 )
+        {
+            return 1;
+        }
+        return 0;
+    }
+    else printf("Greska prilikom otvaranja datoteke!");
+}
+
 int main()
 {
    char dane;
@@ -56,9 +72,72 @@ int main()
 
             if(strcmp(karakter,"A")==0)
             {
-                system("cls");
-                printf("Administrator:%s",korisnickoIme);
+                int opcija;
+                do
+                {
+                    system("cls");
+                    printf("Administrator:%s",korisnickoIme);
+                    printf("\n\n\n");
+                    printf("Odaberite jednu od ponudjenih opcija:\n 1 Kreiranje administratorskih naloga\n 2 Kreiranje klijentskih naloga\n 3 Pregled korisnickih naloga\n 4 Pregled klijentskih naloga\n 5 Aktivacije klijentskih i korisnickih naloga\n 6 Suspendovanje klijnetskih i korisnickih naloga\n 7 Blokiranje klijntskih dogadjaja\n 8 Ponistavanje sifre\n 9 Odjavljivanje\n ");
+                    scanf("%d",&opcija);
+                    if(opcija<1 || opcija>9)
+                    {
+                        do
+                        {
+                            printf("\nPonovo unesite opciju!");
+                            scanf("%d",&opcija);
+                        }
+                        while(opcija>=1 && opcija<=9);
+                    }
+
+                    if(opcija==1)
+                    {
+                        system("cls");
+                        printf("Administrator:%s",korisnickoIme);
+                        printf("\nKreiranje administratorskih naloga");
+                        printf("\n\n\n");
+
+                        char korisnickoImeA[20],lozinkaA[20];
+                        printf("Unesite korisnicko ime:");
+                        scanf("%s",korisnickoImeA);
+                        printf("Unesite lozinku:");
+                        scanf("%s",lozinkaA);
+                        if(nalogPostoji(korisnickoImeA))
+                        {
+                            printf("\nNalog vec postoji!");
+                        }
+                        else
+                        {
+                            FILE *fp;
+                            if(fp=fopen("nalozi.txt","a"))
+                            {
+                                fprintf(fp,"\n%s %s A",korisnickoImeA,lozinkaA);
+                                printf("\n Uspjesno je kreiran administratorski nalog!");
+                            }
+                            else("Greška prilikom otvaranja datoteke!");
+                        }
+                        int kraj;
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
+
+                    if(opcija==9)
+                    {
+                        system("cls");
+                        printf("Odjavljivanje...");
+                    }
+                }
+                while(opcija!=9);
+
+
             }
+
+
+
 
             if(strcmp(karakter,"K")==0)
             {
