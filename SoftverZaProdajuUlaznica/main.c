@@ -1,12 +1,87 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 typedef struct nalog
 {
     char korisnickoIme[20];
     char lozinka[20];
     char karakter[2];
 }NALOG;
+
+
+
+
+
+typedef struct dogadjaj{
+
+char naziv[20];
+int sifra;
+int brojMjesta;
+int cijena;
+char datum[15];
+char vrijeme[10];
+
+}DOGADJAJ;
+
+/*
+int provjeraSifreDogadjaja(int sifra,DOGADJAJ *niz){
+
+int i = 0;
+while(strcmp(niz[i].sifra,sifra)!=0){ // PROVJERA UNESENE SIFRE DOGADJAJA
+    i++;
+    if(strcmp(niz[i].sifra,sifra)==0){
+        return 1;
+    }
+}
+
+
+
+}*/
+
+void kreirajDogadjaj(char *korisnickoIme,DOGADJAJ dogadjaj){
+
+    FILE *lista;
+    printf("Unesite naziv dogadjaja : ");
+    scanf("%s",dogadjaj.naziv);
+    printf("Unesite broj mjesta : ");
+    scanf("%d",&dogadjaj.brojMjesta);
+    printf("Unesite cijenu : ");
+    scanf("%d",&dogadjaj.cijena);
+    printf("Unesite datum : ");
+    scanf("%s",dogadjaj.datum);
+    printf("Unesite vrijeme desavanja : ");
+    scanf("%s",dogadjaj.vrijeme);
+    printf("Unesite sifru dogadjaja (NAPOMENA:SIFRA MORA BITI JEDINSTVENA) : ");
+    scanf("%d",&dogadjaj.sifra);
+
+    if(lista=fopen("listaDogadjaja.txt","a+")){
+
+        fprintf(lista,"Naziv dogadjaja : %s \n",dogadjaj.naziv);
+        fprintf(lista,"Broj mjesta: %d \n",dogadjaj.brojMjesta);
+        fprintf(lista,"Datum dogadjaja :%s \n",dogadjaj.datum);
+        fprintf(lista,"Vrijeme dogadjaja :%s \n",dogadjaj.vrijeme);
+        fprintf(lista,"Cijena jedne ulaznice :%d KM \n",dogadjaj.cijena);
+        fprintf(lista,"Sifra dogadjaja :%d \n",dogadjaj.sifra);
+        fprintf(lista,"Organizator ovog dogadjaja : %s",korisnickoIme);
+        fprintf(lista,"\n\n");
+
+
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 int provjera(char *korisnickoIme,char *lozinka,char *karakter)
 {
@@ -48,6 +123,8 @@ int nalogPostoji(char *korisnickoIme)
 int main()
 {
    char dane;
+   int opcija;
+   DOGADJAJ dogadjaj;
    printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
     do
     {
@@ -72,7 +149,7 @@ int main()
 
             if(strcmp(karakter,"A")==0)
             {
-                int opcija;
+
                 do
                 {
                     system("cls");
@@ -135,7 +212,47 @@ int main()
 
 
             }
+                else if(strcmp(karakter,"K")==0){
 
+
+                do{
+
+                        system("cls");
+
+                    printf("Klijent:%s",korisnickoIme);
+                    printf("\n\n\n");
+                    printf("Odaberite jednu od ponudjenih opcija:\n 1.Kreiranje dogadjaja\n 2.Pregled kreiranih dogadjaja \n 3.Pristup izvjestaju o prodaji \n 4.Ponistavanje pojedinacne ulaznice \n 5.Odjavljivanje\n");
+                     scanf("%d",&opcija);
+                    if(opcija<1 || opcija>5)
+                    {
+                        do
+                        {
+                            printf("\nPonovo unesite opciju!");
+                            scanf("%d",&opcija);
+                        }
+                        while(opcija>=1 && opcija<=5);
+                    }
+
+                            if(opcija==1){
+
+                                system("cls");
+                                printf("Kreiranje dogadjaja : \n");
+
+                                kreirajDogadjaj(korisnickoIme,dogadjaj);
+
+                            }
+
+
+
+
+
+                        if(opcija==5)
+                    {
+                        system("cls");
+                        printf("Odjavljivanje...");
+                    }
+                }while(opcija!=5);
+                }
 
 
 
