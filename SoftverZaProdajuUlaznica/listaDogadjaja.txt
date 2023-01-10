@@ -1,1 +1,8 @@
+Naziv dogadjaja : Dogadjaj 
+Broj mjesta: 55 
+Datum dogadjaja :12.12.2012. 
+Vrijeme dogadjaja :16:00 
+Cijena jedne ulaznice :12 KM 
+Sifra dogadjaja :123 
+Organizator ovog dogadjaja : nenad.spasojevic
 

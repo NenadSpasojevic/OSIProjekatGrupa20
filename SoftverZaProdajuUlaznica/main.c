@@ -9,10 +9,6 @@ typedef struct nalog
     char karakter[2];
 }NALOG;
 
-
-
-
-
 typedef struct dogadjaj{
 
 char naziv[20];
@@ -23,6 +19,8 @@ char datum[15];
 char vrijeme[10];
 
 }DOGADJAJ;
+
+
 
 /*
 int provjeraSifreDogadjaja(int sifra,DOGADJAJ *niz){
@@ -125,6 +123,7 @@ int main()
    char dane;
    int opcija;
    DOGADJAJ dogadjaj;
+
    printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
     do
     {
@@ -239,6 +238,7 @@ int main()
                                 printf("Kreiranje dogadjaja : \n");
 
                                 kreirajDogadjaj(korisnickoIme,dogadjaj);
+                                printf("Uspjesno kreiran dogadjaj!");
 
                             }
 
