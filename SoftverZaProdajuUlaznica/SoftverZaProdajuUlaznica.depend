@@ -1,12 +1,11 @@
 # depslib dependency file v1.0
-1672958414 source:c:\users\david&ilija\documents\osiprojekatgrupa20\softverzaprodajuulaznica\main.c
+1672998285 source:c:\users\david&ilija\documents\osiprojekatgrupa20\softverzaprodajuulaznica\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 
-1673441836 source:c:\users\win 10\documents\osiprojekatgrupa20\softverzaprodajuulaznica\main.c
+1672998285 source:c:\users\david&ilija\desktop\softverzaprodajuulaznica\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
-	<time.h>
 

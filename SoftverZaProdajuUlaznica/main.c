@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+
+//David Preradovic
 typedef struct nalog
 {
     char korisnickoIme[20];
@@ -9,17 +10,6 @@ typedef struct nalog
     char karakter[2];
     char aktivan[2];
 }NALOG;
-
-typedef struct dogadjaj{
-
-char naziv[20];
-int sifra;
-int brojMjesta;
-int cijena;
-char datum[15];
-char vrijeme[10];
-
-}DOGADJAJ;
 
 typedef struct cvor
 {
@@ -103,101 +93,6 @@ void brisi_listu(CVOR **pglava)
     }
 }
 
-/*
-int provjeraSifreDogadjaja(int sifra,DOGADJAJ *niz){
-
-int i = 0;
-while(strcmp(niz[i].sifra,sifra)!=0){ // PROVJERA UNESENE SIFRE DOGADJAJA
-    i++;
-    if(strcmp(niz[i].sifra,sifra)==0){
-        return 1;
-    }
-}
-
-
-
-}*/
-int zauzetoKorisnicko (char ime[30])
-{
-    FILE *nalozi;
-    if(nalozi=fopen("nalozi.txt","r"))
-    {
-        char korisnicko[30];
-        while(fscanf(nalozi,"%s",&korisnicko)!=EOF)
-        {
-            if(strcmp(ime,korisnicko)==0)
-                return 0;
-        }
-	return 1;
-        fclose(nalozi);
-    }
-}
-void registracija()
-{
-    char ime[30], lozinka[30];
-    int t=0;
-    FILE *nalozi;
-    while (t==0)
-    {
-        printf("\nUnesite korisnicko ime:");
-        scanf("%s",ime);
-        t=zauzetoKorisnicko(ime);
-        if(t==0)
-            printf("Korisnicko ime zauzeto, molimo unesite drugo korisnicko ime.");
-    }
-    printf("Unesite lozinku:");
-    scanf("%s",lozinka);
-    if(nalozi=fopen("nalozi.txt","a"))
-    {
-        fprintf(nalozi,"\n%s %s O",ime,lozinka);
-        fclose(nalozi);
-    }
-    printf("Uspjesna registracija!");
-}
-
-void kreirajDogadjaj(char *korisnickoIme,DOGADJAJ dogadjaj){
-
-    FILE *lista;
-    printf("Unesite naziv dogadjaja : ");
-    scanf("%s",dogadjaj.naziv);
-    printf("Unesite broj mjesta : ");
-    scanf("%d",&dogadjaj.brojMjesta);
-    printf("Unesite cijenu : ");
-    scanf("%d",&dogadjaj.cijena);
-    printf("Unesite datum : ");
-    scanf("%s",dogadjaj.datum);
-    printf("Unesite vrijeme desavanja : ");
-    scanf("%s",dogadjaj.vrijeme);
-    printf("Unesite sifru dogadjaja (NAPOMENA:SIFRA MORA BITI JEDINSTVENA) : ");
-    scanf("%d",&dogadjaj.sifra);
-
-    if(lista=fopen("listaDogadjaja.txt","a+")){
-
-        fprintf(lista,"Naziv dogadjaja : %s \n",dogadjaj.naziv);
-        fprintf(lista,"Broj mjesta: %d \n",dogadjaj.brojMjesta);
-        fprintf(lista,"Datum dogadjaja :%s \n",dogadjaj.datum);
-        fprintf(lista,"Vrijeme dogadjaja :%s \n",dogadjaj.vrijeme);
-        fprintf(lista,"Cijena jedne ulaznice :%d KM \n",dogadjaj.cijena);
-        fprintf(lista,"Sifra dogadjaja :%d \n",dogadjaj.sifra);
-        fprintf(lista,"Organizator ovog dogadjaja : %s",korisnickoIme);
-        fprintf(lista,"\n\n");
-
-
-
-    }
-
-}
-
-
-
-
-
-
-
-
-
-
-
 
 int provjera(char *korisnickoIme,char *lozinka,char *karakter)
 {
@@ -207,17 +102,29 @@ int provjera(char *korisnickoIme,char *lozinka,char *karakter)
     if(ulaz=fopen("nalozi.txt","r"))
     {
         NALOG n;
-        while(fscanf(ulaz,"%s %s %s",n.korisnickoIme,n.lozinka,n.karakter)!=EOF)
+        int ime=1;
+        while(fscanf(ulaz,"%s %s %s %s",n.korisnickoIme,n.lozinka,n.karakter,n.aktivan)!=EOF)
         {
-             if(strcmp(n.korisnickoIme,korisnickoIme)==0 && strcmp(n.lozinka,lozinka)==0)
+            if(strcmp(n.aktivan,"A")!=0)
+                    printf("Nalog je suspendovan!\n");
+            if(strcmp(n.korisnickoIme,korisnickoIme)==0 && strcmp(n.lozinka,lozinka)!=0)
+            {
+                ime=0;
+                printf("Neispravna lozinka!\n");
+            }
+
+             if(strcmp(n.korisnickoIme,korisnickoIme)==0 && strcmp(n.lozinka,lozinka)==0 &&  strcmp(n.aktivan,"A")==0)
              {
                  strcpy(karakter,n.karakter);
-                 return 0;
+                return 0;
              }
         }
+        if(ime)
+        printf("Neispravno korisnicko ime!\n");
         return 1;
     }
     else printf("Greska prilikom otvaranja datoteke!");
+    fclose(ulaz);
 }
 
 int nalogPostoji(char *korisnickoIme)
@@ -234,14 +141,90 @@ int nalogPostoji(char *korisnickoIme)
         return 0;
     }
     else printf("Greska prilikom otvaranja datoteke!");
+    fclose(fp);
 }
 
+//Nenad Spasojevic
+typedef struct dogadjaj{
+
+char naziv[20];
+int sifra;
+int brojMjesta;
+int cijena;
+char datum[15];
+char vrijeme[10];
+char organizator[20];
+
+}DOGADJAJ;
+
+void kreirajDogadjaj(char *korisnickoIme){
+
+    DOGADJAJ dogadjaj;
+    FILE *lista;
+    printf("Unesite naziv dogadjaja : ");
+    scanf("%s",dogadjaj.naziv);
+    printf("Unesite broj mjesta : ");
+    scanf("%d",&dogadjaj.brojMjesta);
+    printf("Unesite cijenu : ");
+    scanf("%d",&dogadjaj.cijena);
+    printf("Unesite datum : ");
+    scanf("%s",dogadjaj.datum);
+    printf("Unesite vrijeme desavanja : ");
+    scanf("%s",dogadjaj.vrijeme);
+    printf("Unesite sifru dogadjaja (NAPOMENA:SIFRA MORA BITI JEDINSTVENA) : ");
+    scanf("%d",&dogadjaj.sifra);
+    strcpy(dogadjaj.organizator,korisnickoIme);
+    if(lista=fopen("listaDogadjaja.txt","a+")){
+
+        fprintf(lista,"%s %d %s %s %d %d %s",dogadjaj.naziv,dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,dogadjaj.cijena,dogadjaj.sifra,dogadjaj.organizator);
+
+
+
+    }
+
+}
+
+
+void pregledDogadjaja(char *klijentskoIme){
+
+        FILE *lista;
+
+        DOGADJAJ dogadjaj;
+        char* korisnickoIme;
+        if(lista=fopen("listaDogadjaja.txt","r")){
+
+            while(fscanf(lista,"%s %d %s %s %d %d %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme)!=EOF){
+
+                if(strcmp(klijentskoIme,korisnickoIme)==0){
+
+                printf("Naziv dogadjaja : %s \n",dogadjaj.naziv);
+                printf("Broj mjesta: %d \n",dogadjaj.brojMjesta);
+                printf("Datum dogadjaja :%s \n",dogadjaj.datum);
+                printf("Vrijeme dogadjaja :%s \n",dogadjaj.vrijeme);
+                printf("Cijena jedne ulaznice :%d KM \n",dogadjaj.cijena);
+                printf("Sifra dogadjaja :%d \n",dogadjaj.sifra);
+                printf("Organizator ovog dogadjaja : %s",korisnickoIme);
+                printf("\n\n");
+
+                }
+
+            }
+
+
+
+        }else printf("nije uspjesno otvorena datoteka!");
+
+
+
+
+}
+
+
+//Dejana Malinovic
 int main()
 {
+    int opcija;
    char dane;
-   int opcija;
-   DOGADJAJ dogadjaj;
-
    printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
     do
     {
@@ -253,9 +236,9 @@ int main()
             do
             {
                 brojac++;
-                printf("Unesite korisnicko ime:");
+                printf("\nUnesite korisnicko ime:");
                 scanf("%s",korisnickoIme);
-                printf("Unesite lozinku:");
+                printf("\nUnesite lozinku:");
                 scanf("%s",lozinka);
                 if (brojac==5)
                 {
@@ -266,13 +249,12 @@ int main()
 
             if(strcmp(karakter,"A")==0)
             {
-
                 do
                 {
                     system("cls");
                     printf("Administrator:%s",korisnickoIme);
                     printf("\n\n\n");
-                    printf("Odaberite jednu od ponudjenih opcija:\n 1 Kreiranje administratorskih naloga\n 2 Kreiranje klijentskih naloga\n 3 Pregled korisnickih naloga\n 4 Pregled klijentskih naloga\n 5 Aktivacije klijentskih i korisnickih naloga\n 6 Suspendovanje klijnetskih i korisnickih naloga\n 7 Blokiranje klijntskih dogadjaja\n 8 Ponistavanje sifre\n 9 Odjavljivanje\n ");
+                    printf("Odaberite jednu od ponudjenih opcija:\n 1 Kreiranje administratorskih naloga\n 2 Kreiranje klijentskih naloga\n 3 Pregled klijentskih naloga\n 4 Pregled korisnickih naloga\n 5 Aktivacije klijentskih i korisnickih naloga\n 6 Suspendovanje klijnetskih i korisnickih naloga\n 7 Blokiranje klijntskih dogadjaja\n 8 Ponistavanje sifre\n 9 Odjavljivanje\n ");
                     scanf("%d",&opcija);
                     if(opcija<1 || opcija>9)
                     {
@@ -309,6 +291,7 @@ int main()
                                 printf("\n Uspjesno je kreiran administratorski nalog!");
                             }
                             else("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
                         }
                         int kraj;
                         printf("\nDa biste se vratili na pocetni meni unesite 0:");
@@ -319,7 +302,7 @@ int main()
                         while(kraj!=0);
                     }
 
-                      if(opcija==2)
+                     if(opcija==2)
                     {
                         system("cls");
                         printf("Administrator:%s",korisnickoIme);
@@ -425,23 +408,26 @@ int main()
                         }
                     }
 
+
                     if(opcija==9)
                     {
                         system("cls");
-                        printf("Odjavljivanje...");
+                        printf("Odjavljivanje...");break;
                     }
                 }
-                while(opcija!=9);
+                while(opcija>0 && opcija<10);
 
 
             }
-                else if(strcmp(karakter,"K")==0){
 
 
+
+
+            if(strcmp(karakter,"K")==0)
+            {
                 do{
 
-                        system("cls");
-
+                    system("cls");
                     printf("Klijent:%s",korisnickoIme);
                     printf("\n\n\n");
                     printf("Odaberite jednu od ponudjenih opcija:\n 1.Kreiranje dogadjaja\n 2.Pregled kreiranih dogadjaja \n 3.Pristup izvjestaju o prodaji \n 4.Ponistavanje pojedinacne ulaznice \n 5.Odjavljivanje\n");
@@ -461,12 +447,16 @@ int main()
                                 system("cls");
                                 printf("Kreiranje dogadjaja : \n");
 
-                                kreirajDogadjaj(korisnickoIme,dogadjaj);
+                                kreirajDogadjaj(korisnickoIme);
                                 printf("Uspjesno kreiran dogadjaj!");
 
                             }
 
+                                if(opcija==2){
 
+                                    printf("Pregled dogadjaja: \n");
+                                    pregledDogadjaja(korisnickoIme);
+                                }
 
 
 
@@ -476,14 +466,7 @@ int main()
                         printf("Odjavljivanje...");
                     }
                 }while(opcija!=5);
-                }
 
-
-
-            if(strcmp(karakter,"K")==0)
-            {
-                system("cls");
-                printf("Klijent:%s",korisnickoIme);
             }
 
             if(strcmp(karakter,"O")==0)
@@ -496,7 +479,6 @@ int main()
         else if(dane=='N')
         {
             printf("Registracija:");
-            registracija();
         }
     }
     while(dane!='D' && dane !='N');
