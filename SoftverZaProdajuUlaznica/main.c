@@ -7,6 +7,7 @@ typedef struct nalog
     char korisnickoIme[20];
     char lozinka[20];
     char karakter[2];
+    char aktivan[2];
 }NALOG;
 
 typedef struct dogadjaj{
@@ -20,7 +21,87 @@ char vrijeme[10];
 
 }DOGADJAJ;
 
+typedef struct cvor
+{
+    NALOG n;
+    struct cvor *sljedeci;
+}CVOR;
 
+
+void dodaj(CVOR **pglava, NALOG *n)
+{
+  CVOR *p,*novi = (CVOR *)malloc(sizeof(CVOR));
+  novi->n = *n;
+   if (*pglava == 0)
+  {
+    novi->sljedeci = *pglava;
+    *pglava = novi;
+  }
+  else
+  {
+    for (p = *pglava; p->sljedeci;p = p->sljedeci);
+    novi->sljedeci = p->sljedeci;
+    p->sljedeci = novi;
+  }
+}
+
+CVOR* trazi(CVOR *glava, char *korisnickoIme)
+{
+  while (glava && strcmp(glava->n.korisnickoIme, korisnickoIme) < 0)
+    glava = glava->sljedeci;
+  return glava == 0 || strcmp(glava->n.korisnickoIme, korisnickoIme) > 0 ? 0 : glava;
+}
+
+void pisi(CVOR *glava)
+{
+    FILE *fp;
+    if(fp=fopen("nalozi.txt","w"))
+    {
+        while(glava)
+        {
+            fprintf(fp,"%s %s %s %s\n",glava->n.korisnickoIme,glava->n.lozinka,glava->n.karakter,glava->n.aktivan);
+            glava=glava->sljedeci;
+        }
+
+    }
+    else("Greška prilikom otvaranja datoteke!");
+    fclose(fp);
+}
+int brisi(CVOR **pglava, char *korisnickoIme)
+{
+  if (*pglava == 0)
+    return 0;
+
+  CVOR *p = 0;
+  if (strcmp((*pglava)->n.korisnickoIme, korisnickoIme) == 0)
+  {
+    p = (*pglava);
+    (*pglava) = (*pglava)->sljedeci;
+  }
+  else
+  {
+    CVOR *pr = (*pglava);
+    for (p = (*pglava)->sljedeci; p && strcmp(p->n.korisnickoIme, korisnickoIme) < 0;
+      p = p->sljedeci)
+    pr = p;
+
+    if (p == 0 || strcmp(p->n.korisnickoIme, korisnickoIme) > 0)
+      return 0;
+    pr->sljedeci = p->sljedeci;
+  }
+  free(p);
+  return 1;
+}
+
+void brisi_listu(CVOR **pglava)
+{
+  while (*pglava)
+    {
+        CVOR *p = (*pglava)->sljedeci;
+        free(*pglava);
+        *pglava = p;
+    }
+}
 
 /*
 int provjeraSifreDogadjaja(int sifra,DOGADJAJ *niz){
@@ -236,6 +317,112 @@ int main()
                             scanf("%d",&kraj);
                         }
                         while(kraj!=0);
+                    }
+
+                      if(opcija==2)
+                    {
+                        system("cls");
+                        printf("Administrator:%s",korisnickoIme);
+                        printf("\nKreiranje klijentskih naloga");
+                        printf("\n\n\n");
+
+                        char korisnickoImeA[20],lozinkaA[20];
+                        printf("Unesite korisnicko ime:");
+                        scanf("%s",korisnickoImeA);
+                        printf("Unesite lozinku:");
+                        scanf("%s",lozinkaA);
+                        if(nalogPostoji(korisnickoImeA))
+                        {
+                            printf("\nNalog vec postoji!");
+                        }
+                        else
+                        {
+                            FILE *fp;
+                            if(fp=fopen("nalozi.txt","a"))
+                            {
+                                fprintf(fp,"\n%s %s K",korisnickoImeA,lozinkaA);
+                                printf("\n Uspjesno je kreiran klijentski nalog!");
+                            }
+                            else("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+                        }
+                        int kraj;
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
+
+                    if(opcija==3)
+                    {
+                        system("cls");
+                        printf("Administrator:%s",korisnickoIme);
+                        printf("\nPregled klijentskih naloga:");
+                        printf("\n\n\n");
+
+                        printf("============================================================================");
+
+                        NALOG n;
+                        {
+                            FILE *fp;
+                            int brojac=0;
+                            if(fp=fopen("nalozi.txt","r"))
+                            {
+                                while(fscanf(fp,"%s %s %s %s",n.korisnickoIme,n.lozinka,n.karakter,n.aktivan)!=EOF)
+                                if(strcmp(n.karakter,"K")==0)
+                                {
+                                    brojac++;
+                                    printf("\n%d. %s",brojac,n.korisnickoIme);
+                                    printf("\n============================================================================");
+                                }
+                            }
+                            else("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+                        }
+
+                        int opcija;
+                        printf("\nOdaberite jednu od ponudjenih opcija:\n 1 Brisanje klijentskih naloga\n 2 Suspendovanje klijentskih naloga\n 3 Aktivacija klijntskih naloga\n 4 Pocetni meni\n");
+                        do
+                        {
+                            scanf("%d",&opcija);
+                        }
+                        while(opcija<1 || opcija>4);
+
+                        if(opcija==1)
+                        {
+                            char korisnickoImeK[20];
+                            printf("\nUnesite korisnicko ime:");
+                            scanf("%s",korisnickoImeK);
+                            FILE *fp;
+                            NALOG na;
+                            CVOR *glava=0;
+                            if(fp=fopen("Nalozi.txt","r+"))
+                            {
+                                  while(fscanf(fp,"%s %s %s %s",na.korisnickoIme,na.lozinka,na.karakter,na.aktivan)!=EOF)
+                                  {
+                                     dodaj(&glava,&na);
+                                  }
+                            }
+                            else("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+
+                            if(brisi(&glava,korisnickoImeK))
+                            {
+                                printf("Ujepjesno obrisan nalog!");
+                            }
+                            else printf("Neposotjeci nalog!");
+                            pisi(glava);
+                            brisi_listu(&glava);
+                            int kraj;
+                            printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                            do
+                            {
+                                scanf("%d",&kraj);
+                            }
+                            while(kraj!=0);
+                        }
                     }
 
                     if(opcija==9)

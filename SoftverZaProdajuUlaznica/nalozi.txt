@@ -1,7 +1,5 @@
-david.preradovic 12345 A
-dejana.malinovic 12345 O
-nenad.spasojevic 12345 K
-stefan.svjetlanovic 12345 A
-
-milan.milanovic 12345 O
-boris.borisavljevic 12345 O
+david.preradovic 12345 A A
+dejana.malinovic 12345 O A
+nenad.spasojevic 12345 K A
+stefan.svjetlanovic 12345 A A
+katarina.jekic 12345 K A
