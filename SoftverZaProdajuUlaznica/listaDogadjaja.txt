@@ -6,3 +6,11 @@ Cijena jedne ulaznice :12 KM
 Sifra dogadjaja :123 
 Organizator ovog dogadjaja : nenad.spasojevic
 
+Naziv dogadjaja : Dogadjaj 
+Broj mjesta: 123 
+Datum dogadjaja :20.12.2003 
+Vrijeme dogadjaja :12:00 
+Cijena jedne ulaznice :42 KM 
+Sifra dogadjaja :12 
+Organizator ovog dogadjaja : nenad.spasojevic
+

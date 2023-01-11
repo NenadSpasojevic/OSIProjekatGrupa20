@@ -36,6 +36,43 @@ while(strcmp(niz[i].sifra,sifra)!=0){ // PROVJERA UNESENE SIFRE DOGADJAJA
 
 
 }*/
+int zauzetoKorisnicko (char ime[30])
+{
+    FILE *nalozi;
+    if(nalozi=fopen("nalozi.txt","r"))
+    {
+        char korisnicko[30];
+        while(fscanf(nalozi,"%s",&korisnicko)!=EOF)
+        {
+            if(strcmp(ime,korisnicko)==0)
+                return 0;
+        }
+	return 1;
+        fclose(nalozi);
+    }
+}
+void registracija()
+{
+    char ime[30], lozinka[30];
+    int t=0;
+    FILE *nalozi;
+    while (t==0)
+    {
+        printf("\nUnesite korisnicko ime:");
+        scanf("%s",ime);
+        t=zauzetoKorisnicko(ime);
+        if(t==0)
+            printf("Korisnicko ime zauzeto, molimo unesite drugo korisnicko ime.");
+    }
+    printf("Unesite lozinku:");
+    scanf("%s",lozinka);
+    if(nalozi=fopen("nalozi.txt","a"))
+    {
+        fprintf(nalozi,"\n%s %s O",ime,lozinka);
+        fclose(nalozi);
+    }
+    printf("Uspjesna registracija!");
+}
 
 void kreirajDogadjaj(char *korisnickoIme,DOGADJAJ dogadjaj){
 
@@ -272,6 +309,7 @@ int main()
         else if(dane=='N')
         {
             printf("Registracija:");
+            registracija();
         }
     }
     while(dane!='D' && dane !='N');
