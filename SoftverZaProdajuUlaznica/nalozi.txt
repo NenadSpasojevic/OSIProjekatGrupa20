@@ -2,4 +2,3 @@ david.preradovic 12345 A A
 dejana.malinovic 12345 O A
 nenad.spasojevic 12345 K A
 stefan.svjetlanovic 12345 A A
-katarina.jekic 12345 K A

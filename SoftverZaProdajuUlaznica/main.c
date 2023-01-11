@@ -57,28 +57,42 @@ void pisi(CVOR *glava)
     else("Greška prilikom otvaranja datoteke!");
     fclose(fp);
 }
+
+void pisi2(CVOR *glava)
+{
+
+        while(glava)
+        {
+            printf("%s %s %s %s\n",glava->n.korisnickoIme,glava->n.lozinka,glava->n.karakter,glava->n.aktivan);
+            glava=glava->sljedeci;
+        }
+}
+
 int brisi(CVOR **pglava, char *korisnickoIme)
 {
   if (*pglava == 0)
     return 0;
 
-  CVOR *p = 0;
+  CVOR *p = 0,*prev;
   if (strcmp((*pglava)->n.korisnickoIme, korisnickoIme) == 0)
   {
     p = (*pglava);
     (*pglava) = (*pglava)->sljedeci;
   }
-  else
+   else
   {
-    CVOR *pr = (*pglava);
-    for (p = (*pglava)->sljedeci; p && strcmp(p->n.korisnickoIme, korisnickoIme) < 0;
-      p = p->sljedeci)
-    pr = p;
-
-    if (p == 0 || strcmp(p->n.korisnickoIme, korisnickoIme) > 0)
-      return 0;
-    pr->sljedeci = p->sljedeci;
+    p = (*pglava);
+    while(p && strcmp(p->n.korisnickoIme, korisnickoIme) != 0)
+    {
+        prev=p;
+        p=p->sljedeci;
+    }
   }
+
+  if(p==0)
+  return 0;
+
+  prev->sljedeci=p->sljedeci;
   free(p);
   return 1;
 }
@@ -249,6 +263,7 @@ int main()
 
             if(strcmp(karakter,"A")==0)
             {
+                //David Preradovic
                 do
                 {
                     system("cls");
@@ -263,7 +278,7 @@ int main()
                             printf("\nPonovo unesite opciju!");
                             scanf("%d",&opcija);
                         }
-                        while(opcija>=1 && opcija<=9);
+                        while(opcija<1 || opcija>9);
                     }
 
                     if(opcija==1)
@@ -390,7 +405,6 @@ int main()
                             }
                             else("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
-
                             if(brisi(&glava,korisnickoImeK))
                             {
                                 printf("Ujepjesno obrisan nalog!");
@@ -432,7 +446,7 @@ int main()
                     printf("\n\n\n");
                     printf("Odaberite jednu od ponudjenih opcija:\n 1.Kreiranje dogadjaja\n 2.Pregled kreiranih dogadjaja \n 3.Pristup izvjestaju o prodaji \n 4.Ponistavanje pojedinacne ulaznice \n 5.Odjavljivanje\n");
                      scanf("%d",&opcija);
-                    if(opcija<1 || opcija>5)
+                      if(opcija<1 || opcija>5)
                     {
                         do
                         {
@@ -441,6 +455,7 @@ int main()
                         }
                         while(opcija>=1 && opcija<=5);
                     }
+
 
                             if(opcija==1){
 
