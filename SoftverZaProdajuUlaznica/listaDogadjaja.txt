@@ -1,4 +1,3 @@
-DocekNoveGodine 200 13.1.2023. 22.00 20 1312023 nenad.spasojevic A 0
-Koncert 10000 30.2.2023. 20.00 50 30022023 katarina.jekic A 0
-Zurka 20 13.5.2023. 22.00 10 11 nenad.spasojevic A 0
-Woodstock 1000 30.12.2023. 23.00 30 123 nenad.spasojevic A 0
+DocekNoveGodine 200 13.1.2023. 22.00 20 1312023 nenad.spasojevic B
+Koncert 10000 30.2.2023. 20.00 50 30022023 katarina.jekic A
+Zurka 20 13.5.2023. 22.00 10 11 nenad.spasojevic A

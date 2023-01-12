@@ -358,9 +358,9 @@ void dodajd(CVORD **pglava, DOGADJAJ *d)
   }
 }
 
-CVORD* trazid(CVORD *glava, char *sifra)
+CVORD* trazid(CVORD *glava, int sifra)
 {
-  while (glava && strcmp(glava->d.sifra,sifra) !=0)
+  while (glava && glava->d.sifra!=sifra)
     glava = glava->sljedeci;
   return glava == 0 ? 0 : glava;
 }
@@ -394,13 +394,13 @@ void pisid2(CVORD *glava)
 
 }
 
-int brisid(CVORD **pglava, char *sifra)
+int brisid(CVORD **pglava, int sifra)
 {
   if (*pglava == 0)
     return 0;
 
   CVORD *p = 0,*prev;
-  if (strcmp((*pglava)->d.sifra, sifra) == 0)
+  if ((*pglava)->d.sifra==sifra)
   {
     p = (*pglava);
     (*pglava) = (*pglava)->sljedeci;
@@ -409,7 +409,7 @@ int brisid(CVORD **pglava, char *sifra)
   {
 
     p = (*pglava);
-    while(p && strcmp(p->d.sifra, sifra) != 0)
+    while(p && p->d.sifra != sifra)
     {
         prev=p;
         p=p->sljedeci;
@@ -941,9 +941,9 @@ int main()
 
                         if(opcija==1)
                         {
-                            char sifra[20];
+                            int sifra;
                             printf("\nUnesite sifru dogadjaja:");
-                            scanf("%s",sifra);
+                            scanf("%d",&sifra);
                             FILE *fp;
                             DOGADJAJ dogadjaj;
                             CVORD *glava=0;
@@ -956,8 +956,6 @@ int main()
                             }
                             else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
-                            pisid2(glava);
-
                             CVORD *p=0;
                             p=trazid(glava,sifra);
 
@@ -970,7 +968,6 @@ int main()
                             }
 
                             pisid(glava);
-                            printf("2\n");
                             brisi_listud(&glava);
 
                             int kraj;
@@ -983,7 +980,31 @@ int main()
                         }
                         if(opcija==2)
                         {
-                            //to do
+                            int sifra;
+                            printf("\nUnesite sifru dogadjaja:");
+                            scanf("%d",&sifra);
+                            FILE *fp;
+                            DOGADJAJ dogadjaj;
+                            CVORD *glava=0;
+                            if(fp=fopen("listaDogadjaja.txt","r"))
+                            {
+                                  while(fscanf(fp,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF)
+                                  {
+                                     dodajd(&glava,&dogadjaj);
+                                  }
+                            }
+                            else printf("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+
+                            if(brisid(&glava,sifra))
+                            {
+                                printf("Ujepjesno obrisan dogadjaj!");
+                            }
+                            else printf("Neposotjeci dogajdaj!");
+
+                            pisid(glava);
+                            brisi_listud(&glava);
+
 
                             int kraj;
                             printf("\nDa biste se vratili na pocetni meni unesite 0:");
@@ -995,7 +1016,34 @@ int main()
                         }
                         if(opcija==3)
                         {
-                            //to do
+                            int sifra;
+                            printf("\nUnesite sifru dogadjaja:");
+                            scanf("%d",&sifra);
+                            FILE *fp;
+                            DOGADJAJ dogadjaj;
+                            CVORD *glava=0;
+                            if(fp=fopen("listaDogadjaja.txt","r"))
+                            {
+                                  while(fscanf(fp,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF)
+                                  {
+                                     dodajd(&glava,&dogadjaj);
+                                  }
+                            }
+                            else printf("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+                            CVORD *p=0;
+                            p=trazid(glava,sifra);
+
+                            if(p==0)
+                                printf("\nNepostojeci dogadjaj!");
+                            else
+                            {
+                                printf("\nDogadjaj je aktiviran!");
+                                strcpy(p->d.aktivan,"A");
+                            }
+
+                            pisid(glava);
+                            brisi_listud(&glava);
 
                             int kraj;
                             printf("\nDa biste se vratili na pocetni meni unesite 0:");
