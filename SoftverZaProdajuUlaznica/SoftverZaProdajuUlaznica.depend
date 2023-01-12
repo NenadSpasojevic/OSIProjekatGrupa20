@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1673555421 source:c:\users\david&ilija\documents\osiprojekatgrupa20\softverzaprodajuulaznica\main.c
+1673556859 source:c:\users\david&ilija\documents\osiprojekatgrupa20\softverzaprodajuulaznica\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -9,7 +9,7 @@
 	<stdlib.h>
 	<string.h>
 
-1673556148 source:c:\users\win 10\documents\projekatosigrupa20\softverzaprodajuulaznica\main.c
+1673559130 source:c:\users\win 10\documents\projekatosigrupa20\softverzaprodajuulaznica\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
