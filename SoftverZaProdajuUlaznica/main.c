@@ -202,8 +202,33 @@ char datum[15];
 char vrijeme[10];
 char organizator[20];
 char aktivan[2];
+int brojSlobodnihMjesta;
+int brojZauzetihMjesta;
 
 }DOGADJAJ;
+
+int provjeraSifreDogadjaja(int sifra){
+FILE *lista;
+DOGADJAJ dogadjaj;
+int flag;
+if(lista=fopen("listaDogadjaja","r")){
+
+            while(fscanf(lista,"%s %d %s %s %d %d %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator)!=EOF){
+
+                if(dogadjaj.sifra==sifra){
+                    flag=0;
+        }else flag=1;
+
+    }
+
+
+}
+
+
+
+
+return flag;
+}
 
 void kreirajDogadjaj(char *korisnickoIme){
 
@@ -221,11 +246,21 @@ void kreirajDogadjaj(char *korisnickoIme){
     scanf("%s",dogadjaj.vrijeme);
     printf("Unesite sifru dogadjaja (NAPOMENA:SIFRA MORA BITI JEDINSTVENA) : ");
     scanf("%d",&dogadjaj.sifra);
+/*
+    int flag=provjeraSifreDogadjaja(dogadjaj.sifra);
+    if(flag==0){
+        printf("Sifra nije jedinstvena");
+        return 0;
+    }
+*/
+dogadjaj.brojZauzetihMjesta=0;
+dogadjaj.brojSlobodnihMjesta=dogadjaj.brojMjesta;
     strcpy(dogadjaj.organizator,korisnickoIme);
+
     if(lista=fopen("listaDogadjaja.txt","a+")){
 
-        fprintf(lista,"\n%s %d %s %s %d %d %s A",dogadjaj.naziv,dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,dogadjaj.cijena,dogadjaj.sifra,dogadjaj.organizator);
-
+        fprintf(lista,"\n%s %d %d %d %s %s %d %d %s A",dogadjaj.naziv,dogadjaj.brojMjesta,dogadjaj.brojSlobodnihMjesta,dogadjaj.brojZauzetihMjesta,dogadjaj.datum,dogadjaj.vrijeme,dogadjaj.cijena,dogadjaj.sifra,dogadjaj.organizator);
+        printf("Uspjesno kreiran dogadjaj!");
 
 
     }
@@ -239,14 +274,17 @@ void pregledDogadjaja(char *klijentskoIme){
 
         DOGADJAJ dogadjaj;
         char* korisnickoIme;
+         printf("\n============================================================================\n");
         if(lista=fopen("listaDogadjaja.txt","r")){
 
-            while(fscanf(lista,"%s %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme,dogadjaj.aktivan)!=EOF){
+            while(fscanf(lista,"%s %d %d %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,&dogadjaj.brojSlobodnihMjesta,&dogadjaj.brojZauzetihMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme,dogadjaj.aktivan)!=EOF){
 
                 if(strcmp(klijentskoIme,korisnickoIme)==0){
 
                 printf("Naziv dogadjaja : %s \n",dogadjaj.naziv);
                 printf("Broj mjesta: %d \n",dogadjaj.brojMjesta);
+                printf("Broj slobodnih mjesta: %d \n",dogadjaj.brojSlobodnihMjesta);
+                printf("Broj zauzetih mjesta: %d \n",dogadjaj.brojZauzetihMjesta);
                 printf("Datum dogadjaja :%s \n",dogadjaj.datum);
                 printf("Vrijeme dogadjaja :%s \n",dogadjaj.vrijeme);
                 printf("Cijena jedne ulaznice :%d KM \n",dogadjaj.cijena);
@@ -257,7 +295,7 @@ void pregledDogadjaja(char *klijentskoIme){
                                     else
                                         printf("Blokiran\n");
                 printf("\n\n");
-
+                 printf("\n============================================================================\n");
                 }
 
             }
@@ -296,7 +334,6 @@ void pregledSvihDogadjaja()
 
         }else printf("nije uspjesno otvorena datoteka!");
 }
-
 //David Preradovic
 
 typedef struct cvord
@@ -399,13 +436,18 @@ void brisi_listud(CVORD **pglava)
     }
 }
 
-
-
 //Dejana Malinovic
 int main()
 {
     int opcija;
-    char dane;
+
+   char dane;
+   printf("\t\t\t\t\tSOFTVER ZA PRODAJU ULAZNICA\n");
+   sleep(1);
+   printf("\t\t\t\t\t\tDOBRODOSLI!\n");
+   sleep(1);
+    printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
+
     do
     {
         if(dane=='D' || dane=='d')
@@ -969,6 +1011,7 @@ int main()
                         while(opcija<1 || opcija>4);
                     }
 
+
                     if(opcija==8)
                     {
                         system("cls");
@@ -1085,14 +1128,23 @@ int main()
                                 printf("Kreiranje dogadjaja : \n");
 
                                 kreirajDogadjaj(korisnickoIme);
-                                printf("Uspjesno kreiran dogadjaj!");
 
-                            }
+                                 printf("\nDa biste se vratili na pocetni meni unesite 0:");
+
+                                int kraj;
+                                    do
+                                    {
+                                        scanf("%d",&kraj);
+                                    }
+                                    while(kraj!=0);
+                                    }
+
+
 
                                 if(opcija==2){
                                     system("cls");
                                     printf("Klijent:%s",korisnickoIme);
-                                    printf("\n\n\nPregled dogadjaja: \n");
+                                    printf("\n\n\nPregled dogadjaja: \n\n");
                                     pregledDogadjaja(korisnickoIme);
                                     printf("\nDa biste se vratili na pocetni meni unesite 0:");
                                     int kraj;
@@ -1102,6 +1154,13 @@ int main()
                                     }
                                     while(kraj!=0);
                                     }
+
+
+
+
+
+
+
 
 
 
