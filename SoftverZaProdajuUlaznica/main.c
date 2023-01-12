@@ -644,7 +644,7 @@ int main()
                                      dodaj(&glava,&na);
                                   }
                             }
-                            else("Greška prilikom otvaranja datoteke!");
+                            else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                             CVOR *p;
                             p=trazi(glava,korisnickoImeK);
@@ -732,7 +732,7 @@ int main()
                                     printf("\n============================================================================");
                                 }
                             }
-                            else("Greška prilikom otvaranja datoteke!");
+                            else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                         }
 
@@ -792,7 +792,7 @@ int main()
                                      dodaj(&glava,&na);
                                   }
                             }
-                            else("Greška prilikom otvaranja datoteke!");
+                            else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                             CVOR *p;
                             p=trazi(glava,korisnickoImeK);
@@ -829,7 +829,7 @@ int main()
                                      dodaj(&glava,&na);
                                   }
                             }
-                            else("Greška prilikom otvaranja datoteke!");
+                            else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                             CVOR *p;
                             p=trazi(glava,korisnickoImeK);
@@ -884,7 +884,7 @@ int main()
                                     printf("\n============================================================================");
                                 }
                             }
-                            else("Greška prilikom otvaranja datoteke!");
+                            else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                         }
                             char korisnickoImeK[20];
@@ -955,11 +955,12 @@ int main()
                                      dodajd(&glava,&dogadjaj);
                                   }
                             }
-                            else("Greška prilikom otvaranja datoteke!");
+                            else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                             pisid2(glava);
 
                             CVORD *p=0;
+                            printf("%s",sifra);
                             p=trazid(glava,sifra);
                             if(p==0)
                                 printf("\nNepostojeci dogadjaj!");
@@ -1044,7 +1045,7 @@ int main()
                                     printf("\n============================================================================");
                                 }
                             }
-                            else("Greška prilikom otvaranja datoteke!");
+                            else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                         }
                             char korisnickoImeK[20];
@@ -1060,7 +1061,7 @@ int main()
                                      dodaj(&glava,&na);
                                   }
                             }
-                            else("Greška prilikom otvaranja datoteke!");
+                            else printf("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                             CVOR *p;
                             p=trazi(glava,korisnickoImeK);
