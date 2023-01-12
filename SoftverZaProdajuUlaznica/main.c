@@ -119,7 +119,7 @@ int provjera(char *korisnickoIme,char *lozinka,char *karakter)
         int ime=1;
         while(fscanf(ulaz,"%s %s %s %s",n.korisnickoIme,n.lozinka,n.karakter,n.aktivan)!=EOF)
         {
-            if(strcmp(n.aktivan,"A")!=0)
+            if(strcmp(korisnickoIme,n.korisnickoIme)==0 && strcmp(korisnickoIme,n.lozinka)==0 && strcmp(n.aktivan,"A")!=0)
             {
                    printf("Nalog je suspendovan!\n");
                    ime=0;
@@ -129,7 +129,7 @@ int provjera(char *korisnickoIme,char *lozinka,char *karakter)
                 ime=0;
                 printf("Neispravna lozinka!\n");
             }
-            if(strcmp(n.lozinka,"obrisana")==0 && strcmp(n.aktivan,"A")==0)
+            if(strcmp(korisnickoIme,n.korisnickoIme)==0 && strcmp(n.lozinka,"obrisana")==0 && strcmp(n.aktivan,"A")==0)
             {
                 char lozinka[20];
                 system("cls");
@@ -302,12 +302,10 @@ void pregledSvihDogadjaja()
 int main()
 {
     int opcija;
-   char dane;
-   printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
+    char dane;
     do
     {
-        scanf("%c",&dane);
-        if(dane=='D')
+        if(dane=='D' || dane=='d')
         {
             char korisnickoIme[20],lozinka[20],karakter[2];
             int brojac=0;
@@ -994,9 +992,36 @@ int main()
         }
         else if(dane=='N')
         {
-            printf("Registracija:");
+            system("cls");
+            char korisnickoIme[20];
+            char lozinka[20];
+            printf("Registracija:\n\n\n");
+            int brojac=0;
+            do
+            {
+                if(brojac>0) printf("Korisnicko ime je u upotrebi!\n");
+                printf("Unesite korisnicko ime:\n");
+                scanf("%s",korisnickoIme);
+                brojac++;
+            }
+            while(nalogPostoji(korisnickoIme));
+
+            printf("Unsite lozinku:");
+            scanf("%s",lozinka);
+
+            FILE *fp;
+            if(fp=fopen("nalozi.txt","a"))
+            {
+                fprintf(fp,"\n%s %s O A",korisnickoIme,lozinka);
+            }
+            else printf("Greska prilikom otvaranja datoteke!");
+            fclose(fp);
+            dane='d';
         }
+        printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
+        scanf("%c",&dane);
+        system("cls");
     }
-    while(dane!='D' && dane !='N');
+    while(dane!='0');
 
 }

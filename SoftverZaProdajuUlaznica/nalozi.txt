@@ -3,3 +3,6 @@ dejana.malinovic 12345 O A
 nenad.spasojevic 12345 K A
 stefan.svjetlanovic 12345 O A
 katarina.jekic obrisana K A
+marko.markovic 12345 O A
+fili.filipovic 12345 O A
+milos.mikic 12345 O A
