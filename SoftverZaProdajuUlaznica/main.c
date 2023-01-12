@@ -336,6 +336,7 @@ void pregledSvihDogadjaja()
 }
 //David Preradovic
 
+
 typedef struct cvord
 {
     DOGADJAJ d;
@@ -435,6 +436,7 @@ void brisi_listud(CVORD **pglava)
         *pglava = p;
     }
 }
+
 
 //Dejana Malinovic
 int main()
