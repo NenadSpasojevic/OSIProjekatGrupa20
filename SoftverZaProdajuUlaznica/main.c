@@ -275,7 +275,7 @@ void pregledDogadjaja(char *klijentskoIme){
          printf("\n============================================================================\n");
         if(lista=fopen("listaDogadjaja.txt","r")){
 
-            while(fscanf(lista,"%s %d %s %s %d %d %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme)!=EOF){
+            while(fscanf(lista,"%s %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme,dogadjaj.aktivan)!=EOF){
 
                 if(strcmp(klijentskoIme,korisnickoIme)==0){
 
