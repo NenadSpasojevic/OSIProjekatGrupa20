@@ -202,8 +202,33 @@ char datum[15];
 char vrijeme[10];
 char organizator[20];
 char aktivan[2];
+int brojSlobodnihMjesta;
+int brojZauzetihMjesta;
 
 }DOGADJAJ;
+
+int provjeraSifreDogadjaja(int sifra){
+FILE *lista;
+DOGADJAJ dogadjaj;
+
+if(lista=fopen("listaDogadjaja","r")){
+
+    while(fscanf(lista,"%s %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan)!=EOF){
+
+        if(sifra==dogadjaj.sifra){
+            return 0;
+        }else return 1;
+
+    }
+
+
+}else printf("Nije uspjesno otvorena datoteka!");
+
+
+
+
+
+}
 
 void kreirajDogadjaj(char *korisnickoIme){
 
@@ -221,6 +246,11 @@ void kreirajDogadjaj(char *korisnickoIme){
     scanf("%s",dogadjaj.vrijeme);
     printf("Unesite sifru dogadjaja (NAPOMENA:SIFRA MORA BITI JEDINSTVENA) : ");
     scanf("%d",&dogadjaj.sifra);
+    int flag=provjeraSifreDogadjaja(dogadjaj.sifra);
+    if(flag==0){
+        printf("Sifra nije jedinstvena");
+        return;
+    }
     strcpy(dogadjaj.organizator,korisnickoIme);
     if(lista=fopen("listaDogadjaja.txt","a+")){
 
@@ -239,6 +269,7 @@ void pregledDogadjaja(char *klijentskoIme){
 
         DOGADJAJ dogadjaj;
         char* korisnickoIme;
+         printf("\n============================================================================\n");
         if(lista=fopen("listaDogadjaja.txt","r")){
 
             while(fscanf(lista,"%s %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme,dogadjaj.aktivan)!=EOF){
@@ -257,7 +288,7 @@ void pregledDogadjaja(char *klijentskoIme){
                                     else
                                         printf("Blokiran\n");
                 printf("\n\n");
-
+                 printf("\n============================================================================\n");
                 }
 
             }
@@ -303,7 +334,11 @@ int main()
 {
     int opcija;
    char dane;
-   printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
+   printf("\t\t\t\t\tSOFTVER ZA PRODAJU ULAZNICA\n");
+   sleep(1);
+   printf("\t\t\t\t\t\tDOBRODOSLI!\n");
+   sleep(1);
+    printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
     do
     {
         scanf("%c",&dane);
@@ -962,7 +997,7 @@ int main()
                                 if(opcija==2){
                                     system("cls");
                                     printf("Klijent:%s",korisnickoIme);
-                                    printf("\n\n\nPregled dogadjaja: \n");
+                                    printf("\n\n\nPregled dogadjaja: \n\n");
                                     pregledDogadjaja(korisnickoIme);
                                     printf("\nDa biste se vratili na pocetni meni unesite 0:");
                                     int kraj;
@@ -972,6 +1007,13 @@ int main()
                                     }
                                     while(kraj!=0);
                                     }
+
+
+
+
+
+
+
 
 
 
