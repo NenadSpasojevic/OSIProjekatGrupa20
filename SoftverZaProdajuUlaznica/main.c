@@ -202,7 +202,6 @@ char datum[15];
 char vrijeme[10];
 char organizator[20];
 char aktivan[2];
-int brojSlobodnihMjesta;
 int brojZauzetihMjesta;
 
 }DOGADJAJ;
@@ -254,12 +253,12 @@ void kreirajDogadjaj(char *korisnickoIme){
     }
 */
 dogadjaj.brojZauzetihMjesta=0;
-dogadjaj.brojSlobodnihMjesta=dogadjaj.brojMjesta;
+
     strcpy(dogadjaj.organizator,korisnickoIme);
 
     if(lista=fopen("listaDogadjaja.txt","a+")){
 
-        fprintf(lista,"\n%s %d %d %d %s %s %d %d %s A",dogadjaj.naziv,dogadjaj.brojMjesta,dogadjaj.brojSlobodnihMjesta,dogadjaj.brojZauzetihMjesta,dogadjaj.datum,dogadjaj.vrijeme,dogadjaj.cijena,dogadjaj.sifra,dogadjaj.organizator);
+        fprintf(lista,"\n%s %d %s %s %d %d %s A %d",dogadjaj.naziv,dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,dogadjaj.cijena,dogadjaj.sifra,dogadjaj.organizator,dogadjaj.brojZauzetihMjesta);
         printf("Uspjesno kreiran dogadjaj!");
     }
     fclose(lista);
@@ -276,13 +275,12 @@ void pregledDogadjaja(char *klijentskoIme){
          printf("\n============================================================================\n");
         if(lista=fopen("listaDogadjaja.txt","r")){
 
-            while(fscanf(lista,"%s %d %d %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,&dogadjaj.brojSlobodnihMjesta,&dogadjaj.brojZauzetihMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme,dogadjaj.aktivan)!=EOF){
+            while(fscanf(lista,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF){
 
                 if(strcmp(klijentskoIme,korisnickoIme)==0){
 
                 printf("Naziv dogadjaja : %s \n",dogadjaj.naziv);
                 printf("Broj mjesta: %d \n",dogadjaj.brojMjesta);
-                printf("Broj slobodnih mjesta: %d \n",dogadjaj.brojSlobodnihMjesta);
                 printf("Broj zauzetih mjesta: %d \n",dogadjaj.brojZauzetihMjesta);
                 printf("Datum dogadjaja :%s \n",dogadjaj.datum);
                 printf("Vrijeme dogadjaja :%s \n",dogadjaj.vrijeme);
@@ -313,10 +311,11 @@ void pregledSvihDogadjaja()
         printf("\n============================================================================\n");
         if(lista=fopen("listaDogadjaja.txt","r")){
 
-            while(fscanf(lista,"%s %d %d %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,&dogadjaj.brojSlobodnihMjesta,&dogadjaj.brojZauzetihMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme,dogadjaj.aktivan)!=EOF){
+            while(fscanf(lista,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,korisnickoIme,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF){
                 {
                 printf("Naziv dogadjaja : %s \n",dogadjaj.naziv);
                 printf("Broj mjesta: %d \n",dogadjaj.brojMjesta);
+                printf("Broj zauzetih mjesta: %d \n",dogadjaj.brojZauzetihMjesta);
                 printf("Datum dogadjaja :%s \n",dogadjaj.datum);
                 printf("Vrijeme dogadjaja :%s \n",dogadjaj.vrijeme);
                 printf("Cijena jedne ulaznice :%d KM \n",dogadjaj.cijena);
@@ -388,7 +387,7 @@ void pisid2(CVORD *glava)
 
         while(glava)
         {
-            printf("%s %d %s %s %d %d %s %s\n",glava->d.naziv,glava->d.brojMjesta,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator,glava->d.aktivan);
+            printf("%s %d %s %s %d %d %s %s %d\n",glava->d.naziv,glava->d.brojMjesta,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator,glava->d.aktivan,glava->d.brojZauzetihMjesta);
             glava=glava->sljedeci;
         }
 
@@ -950,7 +949,7 @@ int main()
                             CVORD *glava=0;
                             if(fp=fopen("listaDogadjaja.txt","r"))
                             {
-                                  while(fscanf(fp,"%s %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan)!=EOF)
+                                  while(fscanf(fp,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF)
                                   {
                                      dodajd(&glava,&dogadjaj);
                                   }
@@ -960,8 +959,8 @@ int main()
                             pisid2(glava);
 
                             CVORD *p=0;
-                            printf("%s",sifra);
                             p=trazid(glava,sifra);
+
                             if(p==0)
                                 printf("\nNepostojeci dogadjaj!");
                             else
@@ -1065,6 +1064,7 @@ int main()
                             fclose(fp);
                             CVOR *p;
                             p=trazi(glava,korisnickoImeK);
+
                             if(p==0)
                                 printf("\nNepostojeci nalog!");
                             else
