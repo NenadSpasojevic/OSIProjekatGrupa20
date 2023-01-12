@@ -37,9 +37,9 @@ void dodaj(CVOR **pglava, NALOG *n)
 
 CVOR* trazi(CVOR *glava, char *korisnickoIme)
 {
-  while (glava && strcmp(glava->n.korisnickoIme, korisnickoIme) < 0)
+  while (glava && strcmp(glava->n.korisnickoIme, korisnickoIme) !=0)
     glava = glava->sljedeci;
-  return glava == 0 || strcmp(glava->n.korisnickoIme, korisnickoIme) > 0 ? 0 : glava;
+  return glava == 0 ? 0 : glava;
 }
 
 void pisi(CVOR *glava)
@@ -120,7 +120,11 @@ int provjera(char *korisnickoIme,char *lozinka,char *karakter)
         while(fscanf(ulaz,"%s %s %s %s",n.korisnickoIme,n.lozinka,n.karakter,n.aktivan)!=EOF)
         {
             if(strcmp(n.aktivan,"A")!=0)
-                    printf("Nalog je suspendovan!\n");
+            {
+                   printf("Nalog je suspendovan!\n");
+                   ime=0;
+            }
+
             if(strcmp(n.korisnickoIme,korisnickoIme)==0 && strcmp(n.lozinka,lozinka)!=0)
             {
                 ime=0;
@@ -373,6 +377,10 @@ int main()
                                 {
                                     brojac++;
                                     printf("\n%d. %s",brojac,n.korisnickoIme);
+                                    if(strcmp(n.aktivan,"A")==0)
+                                        printf(" Aktivan");
+                                    else
+                                        printf(" Suspendovan");
                                     printf("\n============================================================================");
                                 }
                             }
@@ -420,6 +428,83 @@ int main()
                             }
                             while(kraj!=0);
                         }
+
+                        if(opcija==2)
+                        {
+                            char korisnickoImeK[20];
+                            printf("\nUnesite korisnicko ime:");
+                            scanf("%s",korisnickoImeK);
+                            FILE *fp;
+                            NALOG na;
+                            CVOR *glava=0;
+                            if(fp=fopen("Nalozi.txt","r+"))
+                            {
+                                  while(fscanf(fp,"%s %s %s %s",na.korisnickoIme,na.lozinka,na.karakter,na.aktivan)!=EOF)
+                                  {
+                                     dodaj(&glava,&na);
+                                  }
+                            }
+                            else("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+                            CVOR *p;
+                            p=trazi(glava,korisnickoImeK);
+                            if(p==0)
+                                printf("\nNepostojeci nalog!");
+                            else
+                            {
+                                printf("\nNalog je suspendovan!");
+                                strcpy(p->n.aktivan,"S");
+                            }
+
+                            pisi(glava);
+                            brisi_listu(&glava);
+                            int kraj;
+                            printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                            do
+                            {
+                                scanf("%d",&kraj);
+                            }
+                            while(kraj!=0);
+                        }
+                         if(opcija==3)
+                        {
+                            char korisnickoImeK[20];
+                            printf("\nUnesite korisnicko ime:");
+                            scanf("%s",korisnickoImeK);
+                            FILE *fp;
+                            NALOG na;
+                            CVOR *glava=0;
+                            if(fp=fopen("Nalozi.txt","r+"))
+                            {
+                                  while(fscanf(fp,"%s %s %s %s",na.korisnickoIme,na.lozinka,na.karakter,na.aktivan)!=EOF)
+                                  {
+                                     dodaj(&glava,&na);
+                                  }
+                            }
+                            else("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+                            CVOR *p;
+                            p=trazi(glava,korisnickoImeK);
+                            if(p==0)
+                                printf("\nNepostojeci nalog!");
+                            else
+                            {
+                                printf("\nNalog je aktiviran!");
+                                strcpy(p->n.aktivan,"A");
+                            }
+
+                            pisi(glava);
+                            brisi_listu(&glava);
+                            int kraj;
+                            printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                            do
+                            {
+                                scanf("%d",&kraj);
+                            }
+                            while(kraj!=0);
+                        }
+
+
                     }
 
 
