@@ -297,6 +297,109 @@ void pregledSvihDogadjaja()
         }else printf("nije uspjesno otvorena datoteka!");
 }
 
+//David Preradovic
+
+typedef struct cvord
+{
+    DOGADJAJ d;
+    struct cvord *sljedeci;
+}CVORD;
+
+
+void dodajd(CVORD **pglava, DOGADJAJ *d)
+{
+  CVORD *p,*novi = (CVORD *)malloc(sizeof(CVORD));
+  novi->d = *d;
+   if (*pglava == 0)
+  {
+    novi->sljedeci = *pglava;
+    *pglava = novi;
+  }
+  else
+  {
+    for (p = *pglava; p->sljedeci;p = p->sljedeci);
+    novi->sljedeci = p->sljedeci;
+    p->sljedeci = novi;
+  }
+}
+
+CVORD* trazid(CVORD *glava, char *sifra)
+{
+  while (glava && strcmp(glava->d.sifra,sifra) !=0)
+    glava = glava->sljedeci;
+  return glava == 0 ? 0 : glava;
+}
+
+void pisid(CVORD *glava)
+{
+    FILE *fp;
+    if(fp=fopen("listaDogadjaja.txt","w"))
+    {
+        while(glava)
+        {
+            fprintf(fp,"%s %d %s %s %d %d %s %s\n",glava->d.naziv,glava->d.brojMjesta,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator,glava->d.aktivan);
+            glava=glava->sljedeci;
+        }
+
+    }
+    else("Greška prilikom otvaranja datoteke!");
+    fclose(fp);
+
+}
+
+void pisid2(CVORD *glava)
+{
+
+        while(glava)
+        {
+            printf("%s %d %s %s %d %d %s %s\n",glava->d.naziv,glava->d.brojMjesta,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator,glava->d.aktivan);
+            glava=glava->sljedeci;
+        }
+
+
+}
+
+int brisid(CVORD **pglava, char *sifra)
+{
+  if (*pglava == 0)
+    return 0;
+
+  CVORD *p = 0,*prev;
+  if (strcmp((*pglava)->d.sifra, sifra) == 0)
+  {
+    p = (*pglava);
+    (*pglava) = (*pglava)->sljedeci;
+  }
+   else
+  {
+
+    p = (*pglava);
+    while(p && strcmp(p->d.sifra, sifra) != 0)
+    {
+        prev=p;
+        p=p->sljedeci;
+    }
+  }
+
+  if(p==0)
+  return 0;
+
+  prev->sljedeci=p->sljedeci;
+  free(p);
+  return 1;
+}
+
+void brisi_listud(CVORD **pglava)
+{
+  while (*pglava)
+    {
+        CVORD *p = (*pglava)->sljedeci;
+        free(*pglava);
+        *pglava = p;
+    }
+}
+
+
 
 //Dejana Malinovic
 int main()
@@ -800,7 +903,36 @@ int main()
 
                         if(opcija==1)
                         {
-                            //to do
+                            char sifra[20];
+                            printf("\nUnesite sifru dogadjaja:");
+                            scanf("%s",sifra);
+                            FILE *fp;
+                            DOGADJAJ dogadjaj;
+                            CVORD *glava=0;
+                            if(fp=fopen("listaDogadjaja.txt","r"))
+                            {
+                                  while(fscanf(fp,"%s %d %s %s %d %d %s %s",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan)!=EOF)
+                                  {
+                                     dodajd(&glava,&dogadjaj);
+                                  }
+                            }
+                            else("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+                            pisid2(glava);
+
+                            CVORD *p=0;
+                            p=trazid(glava,sifra);
+                            if(p==0)
+                                printf("\nNepostojeci dogadjaj!");
+                            else
+                            {
+                                printf("\nDogadjaj je blokiran!");
+                                strcpy(p->d.aktivan,"B");
+                            }
+
+                            pisid(glava);
+                            printf("2\n");
+                            brisi_listud(&glava);
 
                             int kraj;
                             printf("\nDa biste se vratili na pocetni meni unesite 0:");
