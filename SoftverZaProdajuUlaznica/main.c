@@ -332,6 +332,42 @@ void pregledSvihDogadjaja()
 
         }else printf("nije uspjesno otvorena datoteka!");
 }
+
+
+void promjenaLozinke(char korisnickoIme,char *lozinka){
+
+                            FILE *fp;
+                            NALOG na;
+                            CVOR *glava=0;
+                            if(fp=fopen("Nalozi.txt","r+"))
+                            {
+                                  while(fscanf(fp,"%s %s %s %s",na.korisnickoIme,na.lozinka,na.karakter,na.aktivan)!=EOF)
+                                  {
+                                     dodaj(&glava,&na);
+                                  }
+                            }
+                            else printf("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+                            CVOR *p;
+                            p=trazi(glava,korisnickoIme);
+                            if(p==0)
+                                printf("\nNepostojeci nalog!");
+                            else
+                            {
+                                printf("\nNalog je suspendovan!");
+                                strcpy(p->n.lozinka,lozinka);
+                            }
+
+                            pisi(glava);
+                            brisi_listu(&glava);
+
+
+
+
+}
+
+
+
 //David Preradovic
 
 typedef struct cvord
@@ -435,6 +471,27 @@ void brisi_listud(CVORD **pglava)
 }
 
 //Dejana Malinovic
+
+void pregledKupljenihUlaznica (char *korisnikTXT)
+{
+    FILE *korisnik;
+    char s[20];
+    double p;
+    if(korisnik=fopen(korisnikTXT,"r"))
+    {
+        fscanf(korisnik,"%s%lf",s,&p);
+        printf("============================================\n");
+        while(fscanf(korisnik,"%s%lf",s,&p)!=EOF)
+        {
+            printf("Dogadjaj:%-20s Cijena:%3.2lf\n",s,p);
+            printf("============================================\n");
+        }
+    }
+}
+
+
+
+
 int main()
 {
     int opcija;
@@ -444,6 +501,7 @@ int main()
    sleep(1);
    printf("\t\t\t\t\t\tDOBRODOSLI!\n");
    sleep(1);
+   char *lozinkaK;
     do
     {
         if(dane=='D' || dane=='d')
@@ -1222,9 +1280,160 @@ int main()
             if(strcmp(karakter,"O")==0)
             {
                 //Dejana Malinovic
-                system("cls");
-                printf("Korisnik:%s",korisnickoIme);
+                do
+                {
+                    system("cls");
+                    char korisnikTXT[50]={0};
+                    strcat(korisnikTXT,korisnickoIme);
+                    strcat(korisnikTXT,".txt");
+                    FILE *txt=fopen(korisnikTXT,"r");
+                    if(txt==NULL)
+                    {
+                        FILE *noviTxt;
+                        if(noviTxt=fopen(korisnikTXT,"w"))
+                        {
+                            fprintf(noviTxt,"%s\n%lf",korisnickoIme,50.00);
+                        }
+                        fclose(noviTxt);
+                    }
+                    printf("Korisnik:%s\n",korisnickoIme);
+                    int opcija;
+                    printf("Izaberite jednu od ponudjenih pocija:\n\n");
+                    printf("1. Pregled dogadjaja.\n");
+                    printf("2. Kupovina ulaznice.\n");
+                    printf("3. Pregled kupljenih ulaznica.\n");
+                    printf("4. Ponistavanje kupljene ulaznice.\n");
+                    printf("5. Pregled kredita.\n");
+                    printf("5. Promjena lozinke.\n");
+                    printf("6. Odjava sa sistema.\n");
+                    scanf("%d",&opcija);
+                    if(opcija==1)
+                    {
+                        system("cls");
+                        printf("Pregled svih dogadjaja: \n\n");
+                        pregledSvihDogadjaja();
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        int kraj;
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
+                    if(opcija==2)
+                    {
+                        system("cls");
+                        printf("Kupovina ulaznice: \n\n");
+                        pregledSvihDogadjaja();
+                        char nazivDogadjaja[50];
+                        double dostupanKredit,potrebanKredit,preostaliKredit;
+                        FILE* korisnik;
+                        char s[30];
+                        int p;
+                        if(korisnik=fopen(korisnikTXT,"r"))
+                        {
+                            fscanf(korisnik,"%s%lf",s,&dostupanKredit);
+                            fclose(korisnik);
+                        }
+                        printf("Unesite naziv dogadjaja za koji zelite da kupite ulaznicu:");
+                        scanf("%s",nazivDogadjaja);
+                        FILE* dogadjaji;
+                        if(dogadjaji=fopen("listaDogadjaja.txt","r"))
+                        {
+                            int i;
+                            int t=0;
+                            do
+                            {
+                                char dogadjaj[30]={0};
+                                i=fscanf(dogadjaji,"%s",dogadjaj);
+                                if(strcmp(nazivDogadjaja,dogadjaj)==0)
+                                {
+                                    t++;
+                                    break;
+                                }
+                            }
+                            while(i!=EOF);
+                            if (t==0)
+                            {
+                                printf("Dogadjaj sa tim nazivom ne postoji.\n");
+                            }
+                            else
+                            {
+                                fscanf(dogadjaji,"%d%s%lf",&p,s,&potrebanKredit);
+                                if(potrebanKredit>dostupanKredit)
+                                {
+                                    printf("Nemate dovoljno kredita na racunu.");
+                                }
+                                else
+                                {
+                                    printf("Uspijesno ste kupili kartu.");
+                                    preostaliKredit=dostupanKredit-potrebanKredit;
+                                    if(korisnik=fopen(korisnikTXT,"a+"))
+                                    {
+                                        fprintf(korisnik,"\n%s %lf",nazivDogadjaja,potrebanKredit);
+                                        fclose(korisnik);
+                                    }
+                                }
+                            }
+                            fclose(dogadjaji);
+                        }
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        int kraj;
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
+                    if(opcija==3)
+                    {
+                        system("cls");
+                        printf("Pregled kupljenih ulaznica: \n\n");
+                        pregledKupljenihUlaznica(korisnikTXT);
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        int kraj;
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
+                    if(opcija==4)
+                    {
+                        system("cls");
+                        printf("Poništavanje kupljene ulaznice: \n\n");
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        int kraj;
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
+                    /*
+                    if(opcija==5)
+                    {
+                        system("cls");
+                        printf("Promjena lozinke: \n\n");
+                        printf("Unesite novu lozinku : ");
+                        scanf("%s",lozinkaK);
+                        promjenaLozinke(korisnickoIme,lozinkaK);
+                        printf("Lozinka uspjesno promijenjena");
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        int kraj;
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
+                    */
+
+
+                }
+                while(opcija!=6);
             }
+
 
         }
         else if(dane=='N')
