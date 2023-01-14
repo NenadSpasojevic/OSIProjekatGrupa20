@@ -210,24 +210,18 @@ int provjeraSifreDogadjaja(int sifra){
 FILE *lista;
 DOGADJAJ dogadjaj;
 int flag=0;
-if(lista=fopen("listaDogadjaja","r")){
+if(lista=fopen("listaDogadjaja.txt","r")){
 
             while(fscanf(lista,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF){
-
-              if(sifra==dogadjaj.sifra){
-                printf("Sifra nije jedinstvena");break;
-                return 1;
-              }else if(sifra!=dogadjaj.sifra){
-                  continue;
+              if(sifra==dogadjaj.sifra)
+                {
+                    printf("Sifra nije jedinstvena");
+                    return 1;
+                }
               }
-
-
-    }
-
 
 }
 fclose(lista);
-
 
 return 0;
 }
@@ -247,12 +241,15 @@ void kreirajDogadjaj(char *korisnickoIme){
     printf("Unesite vrijeme desavanja : ");
     scanf("%s",dogadjaj.vrijeme);
     printf("Unesite sifru dogadjaja (NAPOMENA:SIFRA MORA BITI JEDINSTVENA) : ");
-    scanf("%d",&dogadjaj.sifra);
+    int brojac=0;
+    do
+    {
+        brojac++;
+        if(brojac>1)printf("\nUnesite novu sifru: ");
+        scanf("%d",&dogadjaj.sifra);
 
-    provjeraSifreDogadjaja(dogadjaj.sifra);
-
-
-
+    }
+    while(provjeraSifreDogadjaja(dogadjaj.sifra));
 
         dogadjaj.brojZauzetihMjesta=0;
 
@@ -260,7 +257,7 @@ void kreirajDogadjaj(char *korisnickoIme){
 
     if(lista=fopen("listaDogadjaja.txt","a+")){
 
-        fprintf(lista,"\n%s %d %s %s %d %d %s A %d",dogadjaj.naziv,dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,dogadjaj.cijena,dogadjaj.sifra,dogadjaj.organizator,dogadjaj.brojZauzetihMjesta);
+        fprintf(lista,"%s %d %s %s %d %d %s A %d\n",dogadjaj.naziv,dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,dogadjaj.cijena,dogadjaj.sifra,dogadjaj.organizator,dogadjaj.brojZauzetihMjesta);
         printf("Uspjesno kreiran dogadjaj!");
 
     }
@@ -340,7 +337,7 @@ void pregledSvihDogadjaja()
 }
 
 
-void promjenaLozinke(char korisnickoIme,char *lozinka){
+void promjenaLozinke(char * korisnickoImeK,char *lozinka){
 
                             FILE *fp;
                             NALOG na;
@@ -352,15 +349,15 @@ void promjenaLozinke(char korisnickoIme,char *lozinka){
                                      dodaj(&glava,&na);
                                   }
                             }
-                            else printf("Greška prilikom otvaranja datoteke!");
+                            else("Greška prilikom otvaranja datoteke!");
                             fclose(fp);
                             CVOR *p;
-                            p=trazi(glava,korisnickoIme);
+                            p=trazi(glava,korisnickoImeK);
                             if(p==0)
                                 printf("\nNepostojeci nalog!");
                             else
                             {
-                                printf("\nNalog je suspendovan!");
+
                                 strcpy(p->n.lozinka,lozinka);
                             }
 
@@ -378,6 +375,7 @@ FILE *lista;
 DOGADJAJ dogadjaj;
 
 if(lista=fopen("listaDogadjaja.txt","r")){
+
             while(fscanf(lista,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF){
 
             if(strcmp(dogadjaj.organizator,klijentskoIme)==0 && strcmp(nazivDogadjaja,dogadjaj.naziv)==0){
@@ -385,8 +383,9 @@ if(lista=fopen("listaDogadjaja.txt","r")){
                 printf("Broj prodatih ulaznica je %d",dogadjaj.brojZauzetihMjesta);break;
 
             }
-            if(strcmp(dogadjaj.organizator,klijentskoIme)!=0 && strcmp(nazivDogadjaja,dogadjaj.naziv)==0){
+            if((strcmp(dogadjaj.organizator,klijentskoIme)!=0 && strcmp(nazivDogadjaja,dogadjaj.naziv)) || (strcmp(dogadjaj.organizator,klijentskoIme)!=0 && strcmp(nazivDogadjaja,dogadjaj.naziv) !=0)){
                 printf("Dogadjaj koji ste unijeli ne postoji ili ga niste vi kreirali");
+
             }
             }
 
@@ -1342,7 +1341,7 @@ int main()
                             printf("\nPonovo unesite opciju!");
                             scanf("%d",&opcija);
                         }
-                        while(opcija>=1 && opcija<=5);
+                        while(opcija<=1 && opcija>=5);
                     }
 
 
@@ -1381,7 +1380,7 @@ int main()
 
                                     if(opcija==3){
                                         system("cls");
-                                        char *naziv;
+                                        char naziv[20];
 
                                         printf("Klijent : %s\n",korisnickoIme);
                                         printf("Pristup izvjestaju o prodaji : \n");
@@ -1675,8 +1674,13 @@ int main()
                     }
                     if(opcija==6)
                     {
+                        char novaLozinka[20];
                         system("cls");
                         printf("Promjena lozinke: \n\n");
+                        printf("Unesite novu lozinku : ");
+                        scanf("%s",novaLozinka);
+                        promjenaLozinke(korisnickoIme,novaLozinka);
+                        printf("Lozinka promijenjena...\n");
                         printf("\nDa biste se vratili na pocetni meni unesite 0:");
                         int kraj;
                         do
