@@ -580,7 +580,7 @@ int main()
                     system("cls");
                     printf("Administrator:%s",korisnickoIme);
                     printf("\n\n\n");
-                    printf("Odaberite jednu od ponudjenih opcija:\n 1 Kreiranje administratorskih naloga\n 2 Kreiranje klijentskih naloga\n 3 Pregled klijentskih naloga\n 4 Pregled korisnickih naloga\n 5 Aktivacije klijentskih i korisnickih naloga\n 6 Suspendovanje klijnetskih i korisnickih naloga\n 7 Pregled klijntskih dogadjaja\n 8 Ponistavanje lozinke\n 9 Odjavljivanje\n ");
+                    printf("Odaberite jednu od ponudjenih opcija:\n 1 Kreiranje administratorskih naloga\n 2 Kreiranje klijentskih naloga\n 3 Pregled klijentskih naloga\n 4 Pregled korisnickih naloga\n 5 Aktivacije klijentskih i korisnickih naloga\n 6 Suspendovanje klijnetskih i korisnickih naloga\n 7 Pregled klijntskih dogadjaja\n 8 Ponistavanje lozinke\n 9 Rromjena lozinke \n10 Odjavljivanje\n ");
                     scanf("%d",&opcija);
                     if(opcija<1 || opcija>9)
                     {
@@ -1309,15 +1309,31 @@ int main()
                             while(kraj!=0);
 
                     }
-
-
                     if(opcija==9)
+                    {
+                        char novaLozinka[20];
+                        system("cls");
+                        printf("Promjena lozinke: \n\n");
+                        printf("Unesite novu lozinku : ");
+                        scanf("%s",novaLozinka);
+                        promjenaLozinke(korisnickoIme,novaLozinka);
+                        printf("Lozinka promijenjena...\n");
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        int kraj;
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
+
+                    if(opcija==10)
                     {
                         system("cls");
                         printf("Odjavljivanje...");break;
                     }
                 }
-                while(opcija>0 && opcija<10);
+                while(opcija>0 && opcija<11);
 
 
             }
@@ -1332,7 +1348,7 @@ int main()
                     system("cls");
                     printf("Klijent:%s",korisnickoIme);
                     printf("\n\n\n");
-                    printf("Odaberite jednu od ponudjenih opcija:\n 1.Kreiranje dogadjaja\n 2.Pregled kreiranih dogadjaja \n 3.Pristup izvjestaju o prodaji \n 4.Ponistavanje pojedinacne ulaznice \n 5.Odjavljivanje\n");
+                    printf("Odaberite jednu od ponudjenih opcija:\n 1.Kreiranje dogadjaja\n 2.Pregled kreiranih dogadjaja \n 3.Pristup izvjestaju o prodaji \n 4.Ponistavanje pojedinacne ulaznice \n 5.Promjena lozinke\n 6.Odjavljivanje\n");
                      scanf("%d",&opcija);
                       if(opcija<1 || opcija>5)
                     {
@@ -1425,14 +1441,31 @@ int main()
                         }
 
 */
+                            if(opcija==5)
+                    {
+                        char novaLozinka[20];
+                        system("cls");
+                        printf("Promjena lozinke: \n\n");
+                        printf("Unesite novu lozinku : ");
+                        scanf("%s",novaLozinka);
+                        promjenaLozinke(korisnickoIme,novaLozinka);
+                        printf("Lozinka promijenjena...\n");
+                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                        int kraj;
+                        do
+                        {
+                            scanf("%d",&kraj);
+                        }
+                        while(kraj!=0);
+                    }
 
 
-                        if(opcija==5)
+                        if(opcija==6)
                     {
                         system("cls");
                         printf("Odjavljivanje...");
                     }
-                }while(opcija!=5);
+                }while(opcija!=6);
 
             }
 
