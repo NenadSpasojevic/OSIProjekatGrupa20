@@ -378,13 +378,16 @@ if(lista=fopen("listaDogadjaja.txt","r")){
 
             while(fscanf(lista,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF){
 
-            if(strcmp(dogadjaj.organizator,klijentskoIme)==0 && strcmp(nazivDogadjaja,dogadjaj.naziv)==0){
-
+            if(strcmp(dogadjaj.organizator,klijentskoIme)==0 && strcmp(nazivDogadjaja,dogadjaj.naziv)==0 && strcmp(dogadjaj.aktivan,"A")==0){
+                    system("cls");
                 printf("Broj prodatih ulaznica je %d",dogadjaj.brojZauzetihMjesta);break;
 
             }
-            if((strcmp(dogadjaj.organizator,klijentskoIme)!=0 && strcmp(nazivDogadjaja,dogadjaj.naziv)) || (strcmp(dogadjaj.organizator,klijentskoIme)!=0 && strcmp(nazivDogadjaja,dogadjaj.naziv) !=0)){
+
+            else if((strcmp(dogadjaj.organizator,klijentskoIme)!=0 && strcmp(nazivDogadjaja,dogadjaj.naziv)==0) || (strcmp(dogadjaj.organizator,klijentskoIme)!=0 && strcmp(nazivDogadjaja,dogadjaj.naziv) !=0)){
+                system("cls");
                 printf("Dogadjaj koji ste unijeli ne postoji ili ga niste vi kreirali");
+
 
             }
             }
@@ -580,9 +583,9 @@ int main()
                     system("cls");
                     printf("Administrator:%s",korisnickoIme);
                     printf("\n\n\n");
-                    printf("Odaberite jednu od ponudjenih opcija:\n 1 Kreiranje administratorskih naloga\n 2 Kreiranje klijentskih naloga\n 3 Pregled klijentskih naloga\n 4 Pregled korisnickih naloga\n 5 Aktivacije klijentskih i korisnickih naloga\n 6 Suspendovanje klijnetskih i korisnickih naloga\n 7 Pregled klijntskih dogadjaja\n 8 Ponistavanje lozinke\n 9 Rromjena lozinke \n10 Odjavljivanje\n ");
+                    printf("Odaberite jednu od ponudjenih opcija:\n 1 Kreiranje administratorskih naloga\n 2 Kreiranje klijentskih naloga\n 3 Pregled klijentskih naloga\n 4 Pregled korisnickih naloga\n 5 Aktivacije klijentskih i korisnickih naloga\n 6 Suspendovanje klijnetskih i korisnickih naloga\n 7 Pregled klijntskih dogadjaja\n 8 Ponistavanje lozinke\n 9 Promjena lozinke \n10 Odjavljivanje\n ");
                     scanf("%d",&opcija);
-                    if(opcija<1 || opcija>9)
+                    if(opcija<1 || opcija>11)
                     {
                         do
                         {
@@ -1333,7 +1336,7 @@ int main()
                         printf("Odjavljivanje...");break;
                     }
                 }
-                while(opcija>0 && opcija<11);
+                while(opcija<0 && opcija<11);
 
 
             }
@@ -1350,7 +1353,7 @@ int main()
                     printf("\n\n\n");
                     printf("Odaberite jednu od ponudjenih opcija:\n 1.Kreiranje dogadjaja\n 2.Pregled kreiranih dogadjaja \n 3.Pristup izvjestaju o prodaji \n 4.Ponistavanje pojedinacne ulaznice \n 5.Promjena lozinke\n 6.Odjavljivanje\n");
                      scanf("%d",&opcija);
-                      if(opcija<1 || opcija>5)
+                      if(opcija<1 || opcija>6)
                     {
                         do
                         {
@@ -1403,6 +1406,7 @@ int main()
                                         printf("Unesite naziv dogadjaja : ");
                                         scanf("%s",naziv);
                                         izvjestajProdaje(naziv,korisnickoIme);
+
                                          printf("\nDa biste se vratili na pocetni meni unesite 0:");
                                         int kraj;
                                     do
@@ -1464,6 +1468,7 @@ int main()
                     {
                         system("cls");
                         printf("Odjavljivanje...");
+                        break;
                     }
                 }while(opcija!=6);
 
@@ -1750,7 +1755,7 @@ int main()
             }
             while(nalogPostoji(korisnickoIme));
 
-            printf("Unsite lozinku:");
+            printf("Unesite lozinku:");
             scanf("%s",lozinka);
 
             FILE *fp;
