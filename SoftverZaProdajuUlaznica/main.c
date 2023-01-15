@@ -11,12 +11,125 @@ typedef struct nalog
     char aktivan[2];
 }NALOG;
 
+typedef struct dogadjaj{
+
+char naziv[20];
+int sifra;
+int brojMjesta;
+int cijena;
+char datum[15];
+char vrijeme[10];
+char organizator[20];
+char aktivan[2];
+int brojZauzetihMjesta;
+
+}DOGADJAJ;
+
 typedef struct cvor
 {
     NALOG n;
     struct cvor *sljedeci;
 }CVOR;
 
+typedef struct cvord
+{
+    DOGADJAJ d;
+    struct cvord *sljedeci;
+}CVORD;
+
+
+void dodajd(CVORD **pglava, DOGADJAJ *d)
+{
+  CVORD *p,*novi = (CVORD *)malloc(sizeof(CVORD));
+  novi->d = *d;
+   if (*pglava == 0)
+  {
+    novi->sljedeci = *pglava;
+    *pglava = novi;
+  }
+  else
+  {
+    for (p = *pglava; p->sljedeci;p = p->sljedeci);
+    novi->sljedeci = p->sljedeci;
+    p->sljedeci = novi;
+  }
+}
+
+CVORD* trazid(CVORD *glava, int sifra)
+{
+  while (glava && glava->d.sifra!=sifra)
+    glava = glava->sljedeci;
+  return glava == 0 ? 0 : glava;
+}
+
+void pisid(CVORD *glava)
+{
+    FILE *fp;
+    if(fp=fopen("listaDogadjaja.txt","w"))
+    {
+        while(glava)
+        {
+            fprintf(fp,"%s %d %s %s %d %d %s %s %d\n",glava->d.naziv,glava->d.brojMjesta,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator,glava->d.aktivan,glava->d.brojZauzetihMjesta);
+            glava=glava->sljedeci;
+        }
+
+    }
+    else("Greška prilikom otvaranja datoteke!");
+    fclose(fp);
+
+}
+
+void pisid2(CVORD *glava)
+{
+
+        while(glava)
+        {
+            printf("%s %d %s %s %d %d %s %s %d\n",glava->d.naziv,glava->d.brojMjesta,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator,glava->d.aktivan,glava->d.brojZauzetihMjesta);
+            glava=glava->sljedeci;
+        }
+
+
+}
+
+int brisid(CVORD **pglava, int sifra)
+{
+  if (*pglava == 0)
+    return 0;
+
+  CVORD *p = 0,*prev;
+  if ((*pglava)->d.sifra==sifra)
+  {
+    p = (*pglava);
+    (*pglava) = (*pglava)->sljedeci;
+  }
+   else
+  {
+
+    p = (*pglava);
+    while(p && p->d.sifra != sifra)
+    {
+        prev=p;
+        p=p->sljedeci;
+    }
+  }
+
+  if(p==0)
+  return 0;
+
+  prev->sljedeci=p->sljedeci;
+  free(p);
+  return 1;
+}
+
+void brisi_listud(CVORD **pglava)
+{
+  while (*pglava)
+    {
+        CVORD *p = (*pglava)->sljedeci;
+        free(*pglava);
+        *pglava = p;
+    }
+}
 
 void dodaj(CVOR **pglava, NALOG *n)
 {
@@ -192,19 +305,7 @@ int nalogPostoji(char *korisnickoIme)
 }
 
 //Nenad Spasojevic
-typedef struct dogadjaj{
 
-char naziv[20];
-int sifra;
-int brojMjesta;
-int cijena;
-char datum[15];
-char vrijeme[10];
-char organizator[20];
-char aktivan[2];
-int brojZauzetihMjesta;
-
-}DOGADJAJ;
 
 int provjeraSifreDogadjaja(int sifra){
 FILE *lista;
@@ -399,69 +500,55 @@ if(lista=fopen("listaDogadjaja.txt","r")){
 
 
 }
-/*
 
-void ponistavanjeUlaznice(char *koriscnickoIme,char *nazivDogadjaja){
+void pregledKupljenihUlaznica (char *korisnikTXT)
+{
+    FILE *korisnik;
+    DOGADJAJ d;
+    if(korisnik=fopen(korisnikTXT,"r"))
+    {
+        printf("==============================================================================================================================================\n");
+        while(fscanf(korisnik,"%s %s %s %d %d %s",d.naziv,d.datum,d.vrijeme,&d.cijena,&d.sifra,d.organizator)!=EOF)
+        {
+            printf("Dogadjaj:%-20s Datum:%-15s Vrijeme:%-15s Cijena:%d.00KM      Sifra:%-10d Organizator:%-30s\n",d.naziv,d.datum,d.vrijeme,d.cijena,d.sifra,d.organizator);
+            printf("==============================================================================================================================================\n");
+        }
+    }
+}
 
 
-            FILE *korisnik;
-            char korisnikTXT[50]={0};
-            strcat(korisnikTXT,korisnickoIme);
-            strcat(korisnikTXT,".txt");
-            if(korisnik=fopen(koriscnickoIme,"r")){
+void pregledKupljenihUlaznicaJedanOrganizator(char *korisnikTXT,char*organizator)
+{
+    FILE *korisnik;
+    DOGADJAJ d;
+    printf("Kupljene ulaznice za vase dogadjaje su : \n");
 
+    if(korisnik=fopen(korisnikTXT,"r"))
+    {
 
-
+        while(fscanf(korisnik,"%s %s %s %d %d %s",d.naziv,d.datum,d.vrijeme,&d.cijena,&d.sifra,d.organizator)!=EOF)
+        {
+            if(strcmp(d.organizator,organizator)==0){
+                    printf("==============================================================================================================================================\n");
+                printf("Dogadjaj:%-20s Datum:%-15s Vrijeme:%-15s Cijena:%d.00KM      Sifra:%-10d Organizator:%-30s\n",d.naziv,d.datum,d.vrijeme,d.cijena,d.sifra,d.organizator);
 
             }
 
 
+        }
+                printf("==============================================================================================================================================\n");
 
+    }
 
 }
-
-*/
-//David Preradovic
-
-typedef struct cvord
-{
-    DOGADJAJ d;
-    struct cvord *sljedeci;
-}CVORD;
-
-
-void dodajd(CVORD **pglava, DOGADJAJ *d)
-{
-  CVORD *p,*novi = (CVORD *)malloc(sizeof(CVORD));
-  novi->d = *d;
-   if (*pglava == 0)
-  {
-    novi->sljedeci = *pglava;
-    *pglava = novi;
-  }
-  else
-  {
-    for (p = *pglava; p->sljedeci;p = p->sljedeci);
-    novi->sljedeci = p->sljedeci;
-    p->sljedeci = novi;
-  }
-}
-
-CVORD* trazid(CVORD *glava, int sifra)
-{
-  while (glava && glava->d.sifra!=sifra)
-    glava = glava->sljedeci;
-  return glava == 0 ? 0 : glava;
-}
-
-void pisid(CVORD *glava)
+void pisiKarte(CVORD *glava, char* korisnikTXT)
 {
     FILE *fp;
-    if(fp=fopen("listaDogadjaja.txt","w"))
+    if(fp=fopen(korisnikTXT,"w"))
     {
         while(glava)
         {
-            fprintf(fp,"%s %d %s %s %d %d %s %s %d\n",glava->d.naziv,glava->d.brojMjesta,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator,glava->d.aktivan,glava->d.brojZauzetihMjesta);
+            fprintf(fp,"%s %s %s %d %d %s\n",glava->d.naziv,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator);
             glava=glava->sljedeci;
         }
 
@@ -470,77 +557,203 @@ void pisid(CVORD *glava)
     fclose(fp);
 
 }
+/*
 
-void pisid2(CVORD *glava)
-{
+void ponistavanjeUlaznice(char *korisnickoIme,char *organizator){
 
-        while(glava)
+
+    FILE *lista;
+    CVORD *glava=0,*glava2=0;
+    char korisnikTXT[50]={0};
+    strcat(korisnikTXT,korisnickoIme);
+    strcat(korisnikTXT,".txt");
+    int sifraD;
+    FILE *korisnik;
+    DOGADJAJ d,d2;
+    pregledKupljenihUlaznicaJedanOrganizator(korisnikTXT,organizator);
+    if(korisnik=fopen(korisnikTXT,"r"))
+    {
+
+        while(fscanf(korisnik,"%s %s %s %d %d %s",d.naziv,d.datum,d.vrijeme,&d.cijena,&d.sifra,d.organizator)!=EOF)
         {
-            printf("%s %d %s %s %d %d %s %s %d\n",glava->d.naziv,glava->d.brojMjesta,glava->d.datum,glava->d.vrijeme,glava->d.cijena,glava->d.sifra,glava->d.organizator,glava->d.aktivan,glava->d.brojZauzetihMjesta);
-            glava=glava->sljedeci;
+
+
+                dodajd(&glava,&d);
+
+
+        }
+    }fclose(korisnik);
+    printf("\n\nUnesite sifru dogadjaja za koji zelite ponistiti ulaznicu : ");
+    scanf("%d",&sifraD);
+    CVORD* p=0;
+    p=trazid(glava,sifraD);
+    if(p==0)
+    {
+        printf("Dogadjaj ne postoji");
+    }
+    else
+    {
+        char korisnikKredit[50]={0};
+        strcat(korisnikKredit,korisnickoIme);
+        strcat(korisnikKredit,"_kredit.txt");
+        FILE *kredit;
+        double trenutniKredit,ukupanKredit;
+        if(kredit=fopen(korisnikKredit,"r"))
+        {
+            fscanf(kredit,"%lf",&trenutniKredit);
+        }
+        fclose(kredit);
+        ukupanKredit=trenutniKredit+p->d.cijena;
+        if(kredit=fopen(korisnikKredit,"w"))
+        {
+            fprintf(kredit,"%.2lf",ukupanKredit);
+        }
+        fclose(kredit);
+        FILE *korisnik2;
+        if(korisnik2=fopen(korisnikTXT,"r"))
+        {
+            while(fscanf(korisnik2,"%s %s %s %d %d %s",d2.naziv,d2.datum,d2.vrijeme,&d2.cijena,&d2.sifra,d2.organizator)!=EOF)
+            {
+                dodajd(&glava2,&d2);
+            }
+        }
+        fclose(korisnik2);
+        brisid(&glava2,sifraD);
+        pisiKarte(glava2,korisnikTXT);
+        FILE *fp;
+        DOGADJAJ dogadjaj;
+        CVORD *glavad=0;
+        if(fp=fopen("listaDogadjaja.txt","r"))
+        {
+            while(fscanf(fp,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF)
+            {
+                dodajd(&glavad,&dogadjaj);
+            }
+        }
+        else printf("Greška prilikom otvaranja datoteke!");
+        fclose(fp);
+        CVORD *p=0;
+        p=trazid(glavad,sifraD);
+        p->d.brojZauzetihMjesta--;
+        pisid(glavad);
+        printf("Uspijesno ste ponistili ulaznicu.\n");
+    }
+}
+
+*/
+
+
+
+void ponistavanjeUlaznice(char *organizator){
+
+
+    FILE *lista;
+    NALOG nalog;
+    CVORD *glava=0,*glava2=0;
+
+    int sifraD;
+    FILE *korisnik;
+    DOGADJAJ d,d2;
+
+    if(lista=fopen("nalozi.txt","r+")){
+
+        while(fscanf(lista,"%s %s %s %s",nalog.korisnickoIme,nalog.lozinka,nalog.karakter,nalog.aktivan)!=EOF){
+
+            if(strcmp(nalog.karakter,"O")==0 && strcmp(nalog.aktivan,"A")==0 ){
+            printf("==============================================================================================================================================\n");
+                printf("%s\n",nalog.korisnickoIme);
+            }
+
         }
 
+            printf("==============================================================================================================================================\n");
 
-}
-
-int brisid(CVORD **pglava, int sifra)
-{
-  if (*pglava == 0)
-    return 0;
-
-  CVORD *p = 0,*prev;
-  if ((*pglava)->d.sifra==sifra)
-  {
-    p = (*pglava);
-    (*pglava) = (*pglava)->sljedeci;
-  }
-   else
-  {
-
-    p = (*pglava);
-    while(p && p->d.sifra != sifra)
-    {
-        prev=p;
-        p=p->sljedeci;
     }
-  }
-
-  if(p==0)
-  return 0;
-
-  prev->sljedeci=p->sljedeci;
-  free(p);
-  return 1;
-}
-
-void brisi_listud(CVORD **pglava)
-{
-  while (*pglava)
+                            char korisnickoIme[20];
+                            printf("Unesite ime korisnika kome ponistavate ulaznicu : ");
+                            scanf("%s",korisnickoIme);
+                            char korisnikTXT[50]={0};
+                            strcat(korisnikTXT,korisnickoIme);
+                            strcat(korisnikTXT,".txt");
+                        pregledKupljenihUlaznicaJedanOrganizator(korisnikTXT,organizator);
+    if(korisnik=fopen(korisnikTXT,"r"))
     {
-        CVORD *p = (*pglava)->sljedeci;
-        free(*pglava);
-        *pglava = p;
+
+        while(fscanf(korisnik,"%s %s %s %d %d %s",d.naziv,d.datum,d.vrijeme,&d.cijena,&d.sifra,d.organizator)!=EOF)
+        {
+
+
+                dodajd(&glava,&d);
+
+
+        }
+    }fclose(korisnik);
+    printf("\n\nUnesite sifru dogadjaja za koji zelite ponistiti ulaznicu : ");
+    scanf("%d",&sifraD);
+    CVORD* p=0;
+    p=trazid(glava,sifraD);
+    if(p==0)
+    {
+        printf("Dogadjaj ne postoji");
+    }
+    else
+    {
+        char korisnikKredit[50]={0};
+        strcat(korisnikKredit,korisnickoIme);
+        strcat(korisnikKredit,"_kredit.txt");
+        FILE *kredit;
+        double trenutniKredit,ukupanKredit;
+        if(kredit=fopen(korisnikKredit,"r"))
+        {
+            fscanf(kredit,"%lf",&trenutniKredit);
+        }
+        fclose(kredit);
+        ukupanKredit=trenutniKredit+p->d.cijena;
+        if(kredit=fopen(korisnikKredit,"w"))
+        {
+            fprintf(kredit,"%.2lf",ukupanKredit);
+        }
+        fclose(kredit);
+        FILE *korisnik2;
+        if(korisnik2=fopen(korisnikTXT,"r"))
+        {
+            while(fscanf(korisnik2,"%s %s %s %d %d %s",d2.naziv,d2.datum,d2.vrijeme,&d2.cijena,&d2.sifra,d2.organizator)!=EOF)
+            {
+                dodajd(&glava2,&d2);
+            }
+        }
+        fclose(korisnik2);
+        brisid(&glava2,sifraD);
+        pisiKarte(glava2,korisnikTXT);
+        FILE *fp;
+        DOGADJAJ dogadjaj;
+        CVORD *glavad=0;
+        if(fp=fopen("listaDogadjaja.txt","r"))
+        {
+            while(fscanf(fp,"%s %d %s %s %d %d %s %s %d",dogadjaj.naziv,&dogadjaj.brojMjesta,dogadjaj.datum,dogadjaj.vrijeme,&dogadjaj.cijena,&dogadjaj.sifra,dogadjaj.organizator,dogadjaj.aktivan,&dogadjaj.brojZauzetihMjesta)!=EOF)
+            {
+                dodajd(&glavad,&dogadjaj);
+            }
+        }
+        else printf("Greška prilikom otvaranja datoteke!");
+        fclose(fp);
+        CVORD *p=0;
+        p=trazid(glavad,sifraD);
+        p->d.brojZauzetihMjesta--;
+        pisid(glavad);
+        printf("Uspjesno ponistena ulaznica !\n");
+
+
     }
 }
+
+
+//David Preradovic
+
+
 
 //Dejana Malinovic
 
-void pregledKupljenihUlaznica (char *korisnikTXT)
-{
-    FILE *korisnik;
-    char s[20];
-    double p;
-    if(korisnik=fopen(korisnikTXT,"r"))
-    {
-        fscanf(korisnik,"%s%lf",s,&p);
-        printf("============================================\n");
-        while(fscanf(korisnik,"%s%lf",s,&p)!=EOF)
-        {
-            printf("Dogadjaj:%-20s Cijena:%3.2lf\n",s,p);
-            printf("============================================\n");
-        }
-    }
-}
 
 
 
@@ -1418,33 +1631,41 @@ int main()
 
                                     }
 
-
 /*
-                        if(opcija==4){
-                                char *nazivDogadjaja;
-                                char *ImeKorisnika;
-                            system("cls");
-                            printf("Klijent : %s\n",korisnickoIme);
-                            printf("Ponistavanje ulaznice : \n");
-                            printf("Unesite naziv dogadjaja : ");
-                            scanf("%s",nazivDogadjaja);
-                            printf("Unesite ime korisnika kome ponistavate ulaznicu : ");
-                            scanf("%s",ImeKorisnika);
-                            ponistavanjeUlaznice(ImeKorisnika,nazivDogadjaja);
+
+                                    if(opcija==4)
+                            {
+                                printf("Ponistavanje pojedinacne ulaznice:\n");
+                                printf("Uneite ime korisnickog naloga kojem zelite ponistiti ulaznicu:");
+                                char odabraniKorisnik[50];
+                                scanf("%s",odabraniKorisnik);
+                                //ako nije dobro korisnicko ime ukucano
+                                ponistavanjeUlaznice(odabraniKorisnik,korisnickoIme);
+                                printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                                int kraj;
+                                do
+                                {
+                                    scanf("%d",&kraj);
+                                }
+                                while(kraj!=0);
+                            }
+                            */
+                        if(opcija==4)
+                            {
+                                system("cls");
+                                printf("Ponistavanje pojedinacne ulaznice:\n");
+                                //ako nije dobro korisnicko ime ukucano
+                                ponistavanjeUlaznice(korisnickoIme);
+                                printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                                int kraj;
+                                do
+                                {
+                                    scanf("%d",&kraj);
+                                }
+                                while(kraj!=0);
+                            }
 
 
-
-                               int kraj;
-                                    do
-                                    {
-                                        scanf("%d",&kraj);
-                                    }
-                                    while(kraj!=0);
-
-
-                        }
-
-*/
                             if(opcija==5)
                     {
                         char novaLozinka[20];
@@ -1476,7 +1697,7 @@ int main()
 
             if(strcmp(karakter,"O")==0)
             {
-                //Dejana Malinovic
+                   //Dejana Malinovic
                 do
                 {
                     system("cls");
@@ -1489,7 +1710,20 @@ int main()
                         FILE *noviTxt;
                         if(noviTxt=fopen(korisnikTXT,"w"))
                         {
-                            fprintf(noviTxt,"%s\n%lf",korisnickoIme,50.00);
+                        }
+                        fclose(noviTxt);
+                    }
+                    char korisnikKredit[50]={0};
+                    strcat(korisnikKredit,korisnickoIme);
+                    strcat(korisnikKredit,"_kredit.txt");
+                    FILE *kredit=fopen(korisnikKredit,"r");
+                    if(kredit==NULL)
+                    {
+                        FILE *noviTxt;
+                        double pocetni=100;
+                        if(noviTxt=fopen(korisnikKredit,"w"))
+                        {
+                            fprintf(noviTxt,"%.2lf\n",pocetni);
                         }
                         fclose(noviTxt);
                     }
@@ -1524,14 +1758,15 @@ int main()
                         pregledSvihDogadjaja();
                         char nazivDogadjaja[50];
                         double dostupanKredit,potrebanKredit,preostaliKredit;
-                        FILE* korisnik;
+                        FILE* kreditFILE,*korisnik;
                         char s[30];
                         int p;
-                        if(korisnik=fopen(korisnikTXT,"r"))
+                        if(kreditFILE=fopen(korisnikKredit,"r"))
                         {
-                            fscanf(korisnik,"%s%lf",s,&dostupanKredit);
-                            fclose(korisnik);
+                            fscanf(kreditFILE,"%lf",&dostupanKredit);
+                            fclose(kreditFILE);
                         }
+                        fclose(kreditFILE);
                         printf("Unesite naziv dogadjaja za koji zelite da kupite ulaznicu:");
                         scanf("%s",nazivDogadjaja);
                         FILE* dogadjaji;
@@ -1556,16 +1791,20 @@ int main()
                             }
                             else
                             {
-                                fscanf(dogadjaji,"%d%s%lf",&p,s,&potrebanKredit);
+                                char s1[30],s2[30];
+                                char a[2];
+                                int sifra;
+                                fscanf(dogadjaji,"%d%s%s%lf%d%s%s",&p,s,s1,&potrebanKredit,&sifra,s2,a);
                                 if(potrebanKredit>dostupanKredit)
                                 {
                                     printf("Nemate dovoljno kredita na racunu.");
                                 }
+                                else if(a[0]=='B' && potrebanKredit<dostupanKredit)
+                                {
+                                    printf("Nije moguce kupiti ulaznicu, dogadjaj je blokiran.\n");
+                                }
                                 else
                                 {
-                                    int k, sifra;
-                                    char string[20];
-                                    fscanf(dogadjaji,"%s%d",string,&sifra);
                                     FILE *fp;
                                     DOGADJAJ dogadjaj;
                                     CVORD *glava=0;
@@ -1588,36 +1827,30 @@ int main()
                                             printf("Sve ulaznice su rasprodane.\n");
                                         else
                                         {
+					    int preuzimanje;
+					    do
+					    {
+				           	 printf("Kako zelite da preuzmete ulaznicu?\n1. Elektronski.\n2. Licno.\n");
+						 scanf("%d",&preuzimanje);
+						 if(preuzimanje==1)
+						 	printf("Ulaznica ce Vam biti poslana putem elektronske poste.\n");
+						 else
+						 	printf("Ulaznica Vam je rezervisana. Mozete je preuzeti na nasem prodajnom mjestu.\n");
+					    }while(preuzimanje<1 || preuzimanje>2);
                                             p->d.brojZauzetihMjesta++;
-                                            /*FILE *fp;
-                                            NALOG na;
-                                            CVOR *glava;
-                                            double kredit;
-                                            if(fp=fopen("Nalozi.txt","r"))
-                                            {
-                                                while(fscanf(fp,"%s %s %s %s %lf",na.korisnickoIme,na.lozinka,na.karakter,na.aktivan,&na.kredit)!=EOF)
-                                                {
-                                                    dodaj(&glava,&na);
-                                                }
-                                            }
-                                            else("Greška prilikom otvaranja datoteke!");
-                                            fclose(fp);
-                                            CVOR *p;
-                                            p=trazi(glava,korisnickoIme);
-                                            if(p==0)
-                                                printf("\nNepostojeci nalog!");
-                                            else
-                                            {
-                                                na.kredit=na.kredit-potrebanKredit;
-                                            }
-                                            pisi(glava);
-                                            brisi_listu(&glava);*/
-                                            printf("Uspijesno ste kupili kartu.");
+                                            printf("Uspijesno ste kupili ulaznicu.");
                                             if(korisnik=fopen(korisnikTXT,"a+"))
                                             {
-                                                fprintf(korisnik,"\n%s %lf",nazivDogadjaja,potrebanKredit);
+                                                fprintf(korisnik,"%s %s %s %d %d %s\n",p->d.naziv,p->d.datum,p->d.vrijeme,p->d.cijena,p->d.sifra,p->d.organizator);
                                                 fclose(korisnik);
                                             }
+                                            FILE *noviTxt;
+                                            preostaliKredit=dostupanKredit-potrebanKredit;
+                                            if(noviTxt=fopen(korisnikKredit,"w"))
+                                            {
+                                                fprintf(noviTxt,"%.2lf\n",preostaliKredit);
+                                            }
+                                            fclose(noviTxt);
                                         }
                                     }
                                     pisid(glava);
@@ -1652,56 +1885,131 @@ int main()
                         system("cls");
                         printf("Ponistavanje kupljene ulaznice: \n\n");
                         pregledKupljenihUlaznica(korisnikTXT);
-                        char dogadjaj[30];
-                        FILE *dogadjaji;
-                        printf("Unesite naziv dogadjaja za koji zelite da ponistite ulaznicu:");
-                        scanf("%s",dogadjaj);
-                        if(dogadjaji=fopen("listaDogadjaja.txt","r"))
+                        int sifra;
+                        printf("Unesite sifru ulaznice koju zelite da ponistite:");
+                        scanf("%d",&sifra);
+                        FILE *fp2;
+                        DOGADJAJ dogadjaj2;
+                        CVORD *glava4=0;
+                        if(fp2=fopen("listaDogadjaja.txt","r"))
                         {
-                            int i;
-                            int t=0;
-                            do
+                            while(fscanf(fp2,"%s %d %s %s %d %d %s %s %d",dogadjaj2.naziv,&dogadjaj2.brojMjesta,dogadjaj2.datum,dogadjaj2.vrijeme,&dogadjaj2.cijena,&dogadjaj2.sifra,dogadjaj2.organizator,dogadjaj2.aktivan,&dogadjaj2.brojZauzetihMjesta)!=EOF)
                             {
-                                char dogadjajUListi[30]={0};
-                                i=fscanf(dogadjaji,"%s",dogadjajUListi);
-                                if(strcmp(dogadjaj,dogadjajUListi)==0)
+                                dodajd(&glava4,&dogadjaj2);
+                            }
+                        }
+                        else printf("Greška prilikom otvaranja datoteke!");
+                        fclose(fp2);
+                        CVORD *p3=0;
+                        p3=trazid(glava4,sifra);
+                        if (p3==NULL)
+                        {
+                            printf("Unijeli ste nevazecu sifru.\n");
+                        }
+                        else
+                        {
+                        if(p3->d.aktivan[0]=='B')
+                        {
+                            printf("Nije moguce ponistiti ulaznicu, dogadjaj vise nije aktivan.\n");
+                        }
+                        else
+                        {
+                            FILE *fp;
+                            DOGADJAJ d;
+                            CVORD *glava=0;
+                            double trenutniKredit,rezultatKredit;
+                            if(fp=fopen(korisnikTXT,"r"))
+                            {
+                                while(fscanf(fp,"%s %s %s %d %d %s",d.naziv,d.datum,d.vrijeme,&d.cijena,&d.sifra,d.organizator)!=EOF)
                                 {
-                                    t++;
-                                    break;
+                                    dodajd(&glava,&d);
                                 }
                             }
-                            while(i!=EOF);
-                            if (t==0)
-                            {
-                                printf("Dogadjaj sa tim nazivom ne postoji.\n");
-                            }
+                            else printf("Greška prilikom otvaranja datoteke!");
+                            fclose(fp);
+                            CVORD *p=0;
+                            p=trazid(glava,sifra);
+                            if(p==0)
+                                printf("\nNepostojeci dogadjaj!");
                             else
                             {
-                                printf("Uspijesno ste ponistili kupljenu ulaznicu.\n");
+                                FILE *kreditFILE;
+                                if(kreditFILE=fopen(korisnikKredit,"r"))
+                                {
+                                    fscanf(kreditFILE,"%lf",&trenutniKredit);
+                                }
+                                fclose(kreditFILE);
+                                FILE *noviTxt;
+                                rezultatKredit=trenutniKredit+p->d.cijena;
+                                brisi_listud(&glava);
+                                if(noviTxt=fopen(korisnikKredit,"w"))
+                                {
+                                    fprintf(noviTxt,"%.2lf\n",rezultatKredit);
+                                }
+                                fclose(noviTxt);
+                                CVORD *glava2=0;
+                                double trenutniKredit,rezultatKredit;
+                                if(fp=fopen(korisnikTXT,"r"))
+                                {
+                                    while(fscanf(fp,"%s %s %s %d %d %s",d.naziv,d.datum,d.vrijeme,&d.cijena,&d.sifra,d.organizator)!=EOF)
+                                    {
+                                        dodajd(&glava2,&d);
+                                    }
+                                }
+                                else printf("Greška prilikom otvaranja datoteke!");
+                                fclose(fp);
+                                if(brisid(&glava2,sifra))
+                                {
+                                    char korisnikTXT2[50]={0};
+                                    strcat(korisnikTXT2,korisnickoIme);
+                                    strcat(korisnikTXT2,".txt");
+                                    pisiKarte(glava2,korisnikTXT2);
+                                }
+                                printf("Uspijesno ste ponistili ulaznicu.\nOdradjen je povrat novca.\n");
+                                FILE *fp1;
+                                DOGADJAJ dogadjaj1;
+                                CVORD *glava3=0;
+                                if(fp1=fopen("listaDogadjaja.txt","r"))
+                                {
+                                    while(fscanf(fp1,"%s %d %s %s %d %d %s %s %d",dogadjaj1.naziv,&dogadjaj1.brojMjesta,dogadjaj1.datum,dogadjaj1.vrijeme,&dogadjaj1.cijena,&dogadjaj1.sifra,dogadjaj1.organizator,dogadjaj1.aktivan,&dogadjaj1.brojZauzetihMjesta)!=EOF)
+                                    {
+                                        dodajd(&glava3,&dogadjaj1);
+                                    }
+                                }
+                                else printf("Greška prilikom otvaranja datoteke!");
+                                fclose(fp1);
+                                CVORD *p=0;
+                                p=trazid(glava3,sifra);
+                                if(p==0)
+                                    printf("\nNepostojeci dogadjaj!");
+                                else
+                                {
+                                    p->d.brojZauzetihMjesta--;
+                                    pisid(glava3);
+                                }
+
+                            }}}
+                            printf("\nDa biste se vratili na pocetni meni unesite 0:");
+                            int kraj;
+                            do
+                            {
+                                scanf("%d",&kraj);
                             }
-                            fclose(dogadjaji);
-                        }
-                        printf("\nDa biste se vratili na pocetni meni unesite 0:");
-                        int kraj;
-                        do
-                        {
-                            scanf("%d",&kraj);
-                        }
-                        while(kraj!=0);
+                            while(kraj!=0);
                     }
                     if(opcija==5)
                     {
                         system("cls");
                         printf("Pregled kredita: \n\n");
-                        FILE* korisnik;
-                        double kredit;
-                        char s[30];
-                        if(korisnik=fopen(korisnikTXT,"r"))
+                        FILE *kreditFILE;
+                        double dostupanKredit;
+                        if(kreditFILE=fopen(korisnikKredit,"r"))
                         {
-                            fscanf(korisnik,"%s%lf",s,&kredit);
-                            printf("Dostupan kredit na racunu:%.2lfKM\n",kredit);
-                            fclose(korisnik);
+                            fscanf(kreditFILE,"%lf",&dostupanKredit);
+                            fclose(kreditFILE);
                         }
+                        fclose(kreditFILE);
+                        printf("Iznos kredita na vasem racunu: %.2lfKM\n",dostupanKredit);
                         printf("\nDa biste se vratili na pocetni meni unesite 0:");
                         int kraj;
                         do
@@ -1735,6 +2043,7 @@ int main()
                     }
                 }
                 while(opcija!=7);
+
             }
 
 
