@@ -1549,7 +1549,7 @@ int main()
                         printf("Odjavljivanje...");break;
                     }
                 }
-                while(opcija<0 && opcija<11);
+                while(opcija>0 && opcija<11);
 
 
             }
