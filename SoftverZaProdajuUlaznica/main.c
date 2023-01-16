@@ -2076,7 +2076,7 @@ int main()
             fclose(fp);
             dane='d';
         }
-        printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N]\n");
+        printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N] Kraj:[0]\n");
         scanf("%c",&dane);
         system("cls");
     }
