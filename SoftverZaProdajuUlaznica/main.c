@@ -836,6 +836,8 @@ int main()
                         char korisnickoImeA[20],lozinkaA[20];
                         printf("Unesite korisnicko ime:");
                         scanf("%s",korisnickoImeA);
+                        printf("Unesite lozinku:");
+                        scanf("%s",lozinkaA);
                         if(nalogPostoji(korisnickoImeA))
                         {
                             printf("\nNalog vec postoji!");
@@ -845,7 +847,7 @@ int main()
                             FILE *fp;
                             if(fp=fopen("nalozi.txt","a"))
                             {
-                                fprintf(fp,"%s %s A A\n",korisnickoImeA,"prvalozinka");
+                                fprintf(fp,"%s %s A A\n",korisnickoImeA,lozinkaA);
                                 printf("\n Uspjesno je kreiran administratorski nalog!");
                             }
                             else("Greška prilikom otvaranja datoteke!");
