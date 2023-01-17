@@ -1,8 +1,1 @@
-david.preradovic 12345 A A
-dejana.malinovic nova O A
-nenad.spasojevic 12345 K A
-stefan.svjetlanovic 12345 O A
-katarina.jekic nova K A
-marko.markovic 12345 O A
-fili.filipovic 12345 O A
-milos.mikic obrisana O A
+igor.dujlovic prvalozinka A

@@ -796,6 +796,19 @@ int main()
                     system("cls");
                     printf("Administrator:%s",korisnickoIme);
                     printf("\n\n\n");
+                    if(strcmp(lozinka,"prvalozinka")==0)
+                    {
+                        char novaLozinka[20];
+                        system("cls");
+                        printf("Promjena lozinke: \n\n");
+                        printf("Unesite novu lozinku : ");
+                        scanf("%s",novaLozinka);
+                        promjenaLozinke(korisnickoIme,novaLozinka);
+                        printf("Lozinka promijenjena...\n");
+                    }
+                    system("cls");
+                    printf("Administrator:%s",korisnickoIme);
+                    printf("\n\n\n");
                     printf("Odaberite jednu od ponudjenih opcija:\n 1 Kreiranje administratorskih naloga\n 2 Kreiranje klijentskih naloga\n 3 Pregled klijentskih naloga\n 4 Pregled korisnickih naloga\n 5 Aktivacije klijentskih i korisnickih naloga\n 6 Suspendovanje klijnetskih i korisnickih naloga\n 7 Pregled klijntskih dogadjaja\n 8 Ponistavanje lozinke\n 9 Promjena lozinke \n10 Odjavljivanje\n ");
                     scanf("%d",&opcija);
                     if(opcija<1 || opcija>11)
@@ -818,8 +831,6 @@ int main()
                         char korisnickoImeA[20],lozinkaA[20];
                         printf("Unesite korisnicko ime:");
                         scanf("%s",korisnickoImeA);
-                        printf("Unesite lozinku:");
-                        scanf("%s",lozinkaA);
                         if(nalogPostoji(korisnickoImeA))
                         {
                             printf("\nNalog vec postoji!");
@@ -829,7 +840,7 @@ int main()
                             FILE *fp;
                             if(fp=fopen("nalozi.txt","a"))
                             {
-                                fprintf(fp,"\n%s %s A",korisnickoImeA,lozinkaA);
+                                fprintf(fp,"\n%s %s A",korisnickoImeA,"prvalozinka");
                                 printf("\n Uspjesno je kreiran administratorski nalog!");
                             }
                             else("Greška prilikom otvaranja datoteke!");
@@ -1549,7 +1560,7 @@ int main()
                         printf("Odjavljivanje...");break;
                     }
                 }
-                while(opcija<0 && opcija<11);
+                while(opcija>0 && opcija<11);
 
 
             }
@@ -2042,7 +2053,7 @@ int main()
                         break;
                     }
                 }
-                while(opcija!=7);
+                while(opcija>0 && opcija<8);
 
             }
 
@@ -2076,10 +2087,10 @@ int main()
             fclose(fp);
             dane='d';
         }
-        printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N] Kraj:[0]\n");
+        printf("Da li vec imate kreiran nalog? Da:[D] Ne:[N] Kraj:[K]\n");
         scanf("%c",&dane);
         system("cls");
     }
-    while(dane!='0');
+    while(dane!='K');
 
 }
