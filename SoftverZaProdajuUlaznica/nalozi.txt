@@ -1,1 +1,2 @@
-igor.dujlovic prvalozinka A
+igor.dujlovic 12345 A A
+

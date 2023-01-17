@@ -788,11 +788,8 @@ int main()
             }
             while(provjera(korisnickoIme,lozinka,&karakter));
 
-            if(strcmp(karakter,"A")==0)
+            if(!provjera(korisnickoIme,lozinka,&karakter))
             {
-                //David Preradovic
-                do
-                {
                     system("cls");
                     printf("Administrator:%s",korisnickoIme);
                     printf("\n\n\n");
@@ -806,6 +803,14 @@ int main()
                         promjenaLozinke(korisnickoIme,novaLozinka);
                         printf("Lozinka promijenjena...\n");
                     }
+            }
+
+            if(strcmp(karakter,"A")==0)
+            {
+                //David Preradovic
+                do
+                {
+
                     system("cls");
                     printf("Administrator:%s",korisnickoIme);
                     printf("\n\n\n");
@@ -840,7 +845,7 @@ int main()
                             FILE *fp;
                             if(fp=fopen("nalozi.txt","a"))
                             {
-                                fprintf(fp,"\n%s %s A",korisnickoImeA,"prvalozinka");
+                                fprintf(fp,"%s %s A A\n",korisnickoImeA,"prvalozinka");
                                 printf("\n Uspjesno je kreiran administratorski nalog!");
                             }
                             else("Greška prilikom otvaranja datoteke!");
@@ -876,7 +881,7 @@ int main()
                             FILE *fp;
                             if(fp=fopen("nalozi.txt","a"))
                             {
-                                fprintf(fp,"\n%s %s K",korisnickoImeA,lozinkaA);
+                                fprintf(fp,"%s %s K A\n",korisnickoImeA,lozinkaA);
                                 printf("\n Uspjesno je kreiran klijentski nalog!");
                             }
                             else("Greška prilikom otvaranja datoteke!");
